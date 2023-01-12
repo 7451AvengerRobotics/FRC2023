@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.DriveConstants;
-import frc.robot.constants.PortConstants;
+import frc.robot.Constants.PortConstants;
+import frc.robot.Constants.DriveConstants;
 
 
 
