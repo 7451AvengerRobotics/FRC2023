@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Constants;
+package frc.robot.constants;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -13,11 +13,7 @@ package frc.robot.Constants;
  * constants are needed, to reduce verbosity.
  */
 public final class PortConstants {
-  public static class OperatorConstants {
-    //public static final int kDriverControllerPort = 0;
-    public static final int[] leftDrive = {0, 1} //need to change ports
-    public static final int[] rightDrive = {2, 3};
+  public static final int[] LEFT_DRIVE = { 2, 4 };
+  public static final int[] RIGHT_DRIVE = { 1, 3 };
 
-
-  }
 }

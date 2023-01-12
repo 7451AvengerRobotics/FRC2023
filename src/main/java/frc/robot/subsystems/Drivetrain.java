@@ -21,7 +21,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.PortConstants;
 
-public class DriveTrain extends SubsystemBase {
+
+
+
+public class Drivetrain extends SubsystemBase {
   protected final WPI_TalonFX[] leftMotors;
   protected final WPI_TalonFX[] rightMotors;
   protected final WPI_TalonFX newMotor;
@@ -31,7 +34,7 @@ public class DriveTrain extends SubsystemBase {
   protected final DifferentialDrive driveTrain;
   private final Gyro gyro = new ADXRS450_Gyro();
 
-  DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading());
+  DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading(), 0, 0); //not sure what encoder distance goes for LeftDistanceMeters and rightDistanceMeters
   DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(DriveConstants.K_TRACK_WIDTH_METERS);
   SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLT_SECONDS_PER_METER, DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER);
   PIDController leftPIDController = new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0);
@@ -41,7 +44,7 @@ public class DriveTrain extends SubsystemBase {
   /**
    * this method is called when the DriveTrainSubsystem class is initialized.
    */
-  public DriveTrain() {
+  public Drivetrain() {
     super();
 
     this.leftMotors = new WPI_TalonFX[] {
@@ -104,10 +107,10 @@ public class DriveTrain extends SubsystemBase {
 
   * @return The pose.
   */
-  public Pose2d getPose() {
+  /*public Pose2d getPose() {
     //return pose
     return odometry.getPoseMeters();
-  }
+  }*/
 
 
   /**
@@ -128,10 +131,10 @@ public class DriveTrain extends SubsystemBase {
 
    * @param pose The pose to which to set the odometry.
    */
-  public void resetOdometry(Pose2d pose) {
+  /*public void resetOdometry(Pose2d pose) {
     resetEncoders();
     odometry.resetPosition(pose, gyro.getRotation2d());
-  }
+  }*/
 
   /**
    * Controls the left and right sides of the drive directly with voltages.
