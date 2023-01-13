@@ -9,12 +9,11 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.Constants.ButtonConstants;
-
+import frc.robot.commands.DriveTypes.ArcadeDrive;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -26,6 +25,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivetrain drivetrain = new Drivetrain();
   private final XboxController controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(ButtonConstants.CONTROLLER_PORT);
@@ -34,6 +34,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    configureDriveTrain();
   }
 
   /**
@@ -49,9 +50,12 @@ public class RobotContainer {
     // sets the command to drive the robot.
     // will run whenever the drivetrain is not being used.
 
-    new RunCommand(() -> drivetrain.arcadeDrive(
-      controller.getLeftX(),
-      controller.getRightY()));
+    drivetrain.setDefaultCommand(
+      new ArcadeDrive(
+      drivetrain,
+      controller:: getLeftY,
+      controller:: getRightX,
+      controller:: getRightBumper));
   }
 
 
