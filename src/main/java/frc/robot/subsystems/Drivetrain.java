@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -63,15 +62,15 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].configFactoryDefault();
     rightMotors[1].configFactoryDefault();
 
-    leftMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    /*leftMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
     leftMotors[1].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
     rightMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-    rightMotors[1].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    rightMotors[1].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);*/
 
-    leftMotors[0].configOpenloopRamp(0);
+    /*leftMotors[0].configOpenloopRamp(0);
     leftMotors[1].configOpenloopRamp(0);
     rightMotors[0].configOpenloopRamp(0);
-    rightMotors[1].configOpenloopRamp(0);
+    rightMotors[1].configOpenloopRamp(0);*/
 
     leftMotors[1].follow(leftMotors[0]);
     rightMotors[1].follow(rightMotors[0]);

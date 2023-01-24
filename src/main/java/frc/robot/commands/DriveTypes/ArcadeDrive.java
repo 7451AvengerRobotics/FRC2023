@@ -1,5 +1,6 @@
 package frc.robot.commands.DriveTypes;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
@@ -11,6 +12,7 @@ public class ArcadeDrive extends CommandBase {
   private final DoubleSupplier forward;
   private final DoubleSupplier turn;
   private final BooleanSupplier turbo;
+  private final SlewRateLimiter slewRate;
 
   /**
    * Creates a new DefaultDrive.
@@ -21,23 +23,21 @@ public class ArcadeDrive extends CommandBase {
    * @param turbo     The button input for toggling the robot speed
    */
   public ArcadeDrive(
-      Drivetrain subsystem,
-      DoubleSupplier left,
-      DoubleSupplier right,
-      BooleanSupplier turbo) {
+      Drivetrain subsystem, DoubleSupplier left, DoubleSupplier right, BooleanSupplier turbo) {
         super();
 
     this.drive = subsystem;
     this.forward = left;
     this.turn = right;
     this.turbo = turbo;
+    slewRate = new SlewRateLimiter(0.5);
 
     addRequirements(drive);
   }
 
   @Override
   public void execute() {
-    double scalar = turbo.getAsBoolean() ? 0.6 : 0.4;
-    drive.arcadeDrive(forward.getAsDouble() * -scalar, turn.getAsDouble() * -scalar);
+    double scalar = turbo.getAsBoolean() ? .53 : .53;
+    drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
   }
 }
