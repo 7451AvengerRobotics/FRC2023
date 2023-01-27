@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
@@ -32,6 +31,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    drivetrain.gyroCalibrate();
     // Configure the trigger bindings
     configureBindings();
     configureDriveTrain();
@@ -55,8 +55,9 @@ public class RobotContainer {
       drivetrain,
       controller:: getLeftY,
       controller:: getRightX,
-      controller:: getRightBumper));
-  }
+      controller:: getRightBumper,
+      controller:: getLeftBumper)); 
+   }
 
 
 
@@ -79,6 +80,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return null;
   }
+  
 }
