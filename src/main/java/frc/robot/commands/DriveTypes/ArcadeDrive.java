@@ -12,7 +12,6 @@ public class ArcadeDrive extends CommandBase {
   private final DoubleSupplier forward;
   private final DoubleSupplier turn;
   private final BooleanSupplier turbo;
-  private final BooleanSupplier precision;
   private final SlewRateLimiter slewRate;
 
   /**
@@ -22,34 +21,23 @@ public class ArcadeDrive extends CommandBase {
    * @param left      The control input for driving backwards
    * @param right     The control input for turning
    * @param turbo     The button input for toggling the robot speed
-   * @param precision The button input for slowing the robot speed
    */
   public ArcadeDrive(
-      Drivetrain subsystem, DoubleSupplier left, DoubleSupplier right, BooleanSupplier turbo, BooleanSupplier precision) {
+      Drivetrain subsystem, DoubleSupplier left, DoubleSupplier right, BooleanSupplier turbo) {
         super();
 
     this.drive = subsystem;
     this.forward = left;
     this.turn = right;
     this.turbo = turbo;
-    this.precision = precision;
-    slewRate = new SlewRateLimiter(12);
+    slewRate = new SlewRateLimiter(0.5);
 
     addRequirements(drive);
   }
 
   @Override
   public void execute() {
-    if (turbo.getAsBoolean() == true){
-    double scalar = turbo.getAsBoolean() ? 1 : 1;
+    double scalar = turbo.getAsBoolean() ? .53 : .53;
     drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
-    } else if (precision.getAsBoolean() == true){
-      double scalar = turbo.getAsBoolean() ? 0.5 : 0.5;
-      drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
-    }
-    else{
-      double scalar = turbo.getAsBoolean() ? 0.5 : 0.5;
-      drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
-    }
   }
 }
