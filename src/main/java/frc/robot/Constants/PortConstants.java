@@ -16,5 +16,6 @@ public final class PortConstants {
   public static final int[] LEFT_DRIVE = { 1, 4 };
   public static final int[] RIGHT_DRIVE = { 2, 3 };
 
+  public static final int TestMotor = 7;
   public static final int Gyro = 0;
 }

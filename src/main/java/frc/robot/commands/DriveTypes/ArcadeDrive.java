@@ -30,14 +30,19 @@ public class ArcadeDrive extends CommandBase {
     this.forward = left;
     this.turn = right;
     this.turbo = turbo;
-    slewRate = new SlewRateLimiter(0.5);
+    slewRate = new SlewRateLimiter(12);
 
     addRequirements(drive);
   }
 
   @Override
   public void execute() {
-    double scalar = turbo.getAsBoolean() ? .53 : .53;
-    drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
+    if (turbo.getAsBoolean() == true){
+      double scalar = turbo.getAsBoolean() ? 1: 1;
+      drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
+    } else{
+      double scalar = turbo.getAsBoolean() ? .5 : .7;
+      drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
+    }
   }
 }
