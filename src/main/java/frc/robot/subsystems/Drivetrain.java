@@ -1,11 +1,8 @@
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.math.controller.PIDController;
@@ -16,11 +13,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.DriveConstants;
@@ -67,8 +60,8 @@ public class Drivetrain extends SubsystemBase {
     differentialDrive = new DifferentialDrive(leftMotors[0], rightMotors[0]);
     gyro = new Pigeon2(PortConstants.Gyro); 
 
-    odometry = new DifferentialDriveOdometry(this.getHeading(), Units.inchesToMeters(DriveConstants.KP_DRIVE_VELOCITY)/60,
-    rightMotors[0].getSelectedSensorPosition()/8 * 2 * Math.PI * Units.inchesToMeters(DriveConstants.KP_DRIVE_VELOCITY)/60);
+    odometry = new DifferentialDriveOdometry(this.getHeading(),  leftMotors[0].getSelectedSensorPosition()/DriveConstants.conversionForFalconUnits,
+    rightMotors[0].getSelectedSensorPosition()/DriveConstants.conversionForFalconUnits);
 
 
 
@@ -93,8 +86,8 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    odometry.update(this.getHeading(), Units.inchesToMeters(DriveConstants.KP_DRIVE_VELOCITY)/60,
-    rightMotors[0].getSelectedSensorPosition()/8 * 2 * Math.PI * Units.inchesToMeters(DriveConstants.KP_DRIVE_VELOCITY)/60);
+    odometry.update(this.getHeading(), leftMotors[0].getSelectedSensorPosition()/Units.inchesToMeters(DriveConstants.KP_DRIVE_VELOCITY)/60,
+    rightMotors[0].getSelectedSensorPosition()/ DriveConstants.conversionForFalconUnits);  
   }
 
   public Pose2d getPose(){
@@ -102,7 +95,8 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return new DifferentialDriveWheelSpeeds(leftMotors[0].getSelectedSensorVelocity(), rightMotors[0].getSelectedSensorVelocity());
+    return new DifferentialDriveWheelSpeeds(leftMotors[0].getSelectedSensorVelocity() * 10/DriveConstants.conversionForFalconUnits, 
+                                            rightMotors[0].getSelectedSensorVelocity() * 10/DriveConstants.conversionForFalconUnits);
   }
 
   public void resetOdometry(Pose2d pose){
@@ -139,6 +133,10 @@ public class Drivetrain extends SubsystemBase {
     double ypr[] = {0, 0, 0};
     gyro.getYawPitchRoll(ypr);
     return Rotation2d.fromDegrees((Math.IEEEremainder(ypr[0], 360)* -1.0d));
+
+  }
+  public double getGyroYaw(){
+    return gyro.getYaw();
   }
 
 

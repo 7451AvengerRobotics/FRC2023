@@ -1,6 +1,7 @@
 package frc.robot.Constants;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
   
@@ -51,5 +52,12 @@ public class DriveConstants {
     double sensorCounts = motorRPM * (2048.0 / 600.0);
     return sensorCounts;
   }
+
+
+  public static final double GEAR_RATIO = 12.75;
+  public static final double wheelCircumferenceInches = 8 * Math.PI;
+  public static final double ENCODER_EDGES_PER_REV = 2048;
+
+  public static final double conversionForFalconUnits = (ENCODER_EDGES_PER_REV * Units.inchesToMeters(wheelCircumferenceInches));
 
 }
