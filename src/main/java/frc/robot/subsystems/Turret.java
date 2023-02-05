@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.Constants.PortConstants;
 
 public class Turret {
