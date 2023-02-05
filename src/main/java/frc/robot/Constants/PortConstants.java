@@ -18,4 +18,5 @@ public final class PortConstants {
 
   public static final int TestMotor = 7;
   public static final int Gyro = 5;
+  public static final int Turret = 6;
 }
