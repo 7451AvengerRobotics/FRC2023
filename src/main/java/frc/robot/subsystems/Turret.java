@@ -20,7 +20,6 @@ public class Turret {
         encoder = turret.getEncoder();
         turret.restoreFactoryDefaults();
         pidController.setOutputRange(-0.8, 0.8);
-        // turretTurnMotor.setClosedLoopRampRate(.5);
         turret.enableSoftLimit(SoftLimitDirection.kForward, true);
         turret.enableSoftLimit(SoftLimitDirection.kReverse, true);
         turret.setIdleMode(IdleMode.kBrake);
