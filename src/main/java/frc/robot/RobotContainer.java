@@ -13,8 +13,6 @@ import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
-//import edu.wpi.first.math.controller.PIDController;
-//import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -97,59 +95,59 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    // Create a voltage constraint to ensure we don't accelerate too fast
+    //Create a voltage constraint to ensure we don't accelerate too fast
 
 
-    // var autoVoltageConstraint =
-    //   new DifferentialDriveVoltageConstraint(
-    //       new SimpleMotorFeedforward(
-    //           DriveConstants.KS_VOLTS,
-    //           DriveConstants.KV_VOLT_SECONDS_PER_METER,
-    //           DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-    //           DriveConstants.K_DRIVE_KINEMATICS,
-    //           DriveConstants.MAX_DRIVE_VOLTAGE);
+    var autoVoltageConstraint =
+      new DifferentialDriveVoltageConstraint(
+          new SimpleMotorFeedforward(
+              DriveConstants.KS_VOLTS,
+              DriveConstants.KV_VOLT_SECONDS_PER_METER,
+              DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+              DriveConstants.K_DRIVE_KINEMATICS,
+              DriveConstants.MAX_DRIVE_VOLTAGE);
 
-    //   //Create config for trajectory
-    //   TrajectoryConfig config =
-    //      new TrajectoryConfig(
-    //         DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED,
-    //         DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-    //         // Add kinematics to ensure max speed is actually obeyed
-    //         .setKinematics(DriveConstants.K_DRIVE_KINEMATICS)
-    //         // Apply the voltage constraint
-    //         .addConstraint(autoVoltageConstraint);
+      //Create config for trajectory
+      TrajectoryConfig config =
+         new TrajectoryConfig(
+            DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED,
+            DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(DriveConstants.K_DRIVE_KINEMATICS)
+            // Apply the voltage constraint
+            .addConstraint(autoVoltageConstraint);
 
-    //   // An example trajectory to follow.  All units in meters.
-    //   Trajectory exampleTrajectory =
-    //     TrajectoryGenerator.generateTrajectory(
-    //       // Start at the origin facing the +X direction
-    //       new Pose2d(0, 0, new Rotation2d(0)),
-    //       // Pass through these two interior waypoints, making an 's' curve path
-    //       List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    //       // End 3 meters straight ahead of where we started, facing forward
-    //       new Pose2d(3, 0, new Rotation2d(0)),
-    //       // Pass config
-    //       config);
+      // An example trajectory to follow.  All units in meters.
+      Trajectory exampleTrajectory =
+        TrajectoryGenerator.generateTrajectory(
+          // Start at the origin facing the +X direction
+          new Pose2d(0, 0, new Rotation2d(0)),
+          // Pass through these two interior waypoints, making an 's' curve path
+          List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+          // End 3 meters straight ahead of where we started, facing forward
+          new Pose2d(3, 0, new Rotation2d(0)),
+          // Pass config
+          config);
 
-    //   RamseteCommand ramseteCommand =
-    //     new RamseteCommand(
-    //       exampleTrajectory,
-    //       drivetrain::getPose,
-    //       new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA),
-    //       new SimpleMotorFeedforward(
-    //         DriveConstants.KS_VOLTS,
-    //         DriveConstants.KV_VOLT_SECONDS_PER_METER,
-    //         DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-    //         DriveConstants.K_DRIVE_KINEMATICS,
-    //         drivetrain::getWheelSpeeds,
-    //         new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-    //         new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-    //         drivetrain
-    //         );
+      RamseteCommand ramseteCommand =
+        new RamseteCommand(
+          exampleTrajectory,
+          drivetrain::getPose,
+          new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA),
+          new SimpleMotorFeedforward(
+            DriveConstants.KS_VOLTS,
+            DriveConstants.KV_VOLT_SECONDS_PER_METER,
+            DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+            DriveConstants.K_DRIVE_KINEMATICS,
+            drivetrain::getWheelSpeeds,
+            new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
+            new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
+            drivetrain
+            );
 
-    //   drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
+      drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
 
-    // return ramseteCommand.andThen(() -> drivetrain.tankDrive(0, 0));
+    return ramseteCommand.andThen(() -> drivetrain.tankDrive(0, 0));
     return null;
   }
 }
