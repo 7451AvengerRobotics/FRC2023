@@ -142,12 +142,10 @@ public class RobotContainer {
             drivetrain::getWheelSpeeds,
             new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
             new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-            drivetrain
-            );
+            drivetrain::tankDrive,
+            drivetrain);
 
       drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
 
-    return ramseteCommand.andThen(() -> drivetrain.tankDrive(0, 0));
-    return null;
-  }
+    return ramseteCommand.andThen(() -> drivetrain.tankDrive(0, 0));  }
 }
