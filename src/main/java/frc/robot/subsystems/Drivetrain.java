@@ -97,7 +97,11 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     //Updating the odometry every 20 ms
     odometry.update(this.getHeading(), leftMotors[0].getSelectedSensorPosition()/DriveConstants.conversionForFalconUnits,
-    rightMotors[0].getSelectedSensorPosition()/ DriveConstants.conversionForFalconUnits);  
+    rightMotors[0].getSelectedSensorPosition()/ DriveConstants.conversionForFalconUnits);
+    differentialDrive.setSafetyEnabled(true);
+    differentialDrive.setSafetyEnabled(false);
+    differentialDrive.setExpiration(.1);
+    differentialDrive.feed();
   }
 
   /*
@@ -112,8 +116,8 @@ public class Drivetrain extends SubsystemBase {
    * @return Differential Drive Wheel Speeds 
   */
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return new DifferentialDriveWheelSpeeds(leftMotors[0].getSelectedSensorVelocity() * 10/ DriveConstants.conversionForFalconUnits, 
-                                            rightMotors[0].getSelectedSensorVelocity()* 10/ DriveConstants.conversionForFalconUnits);
+    return new DifferentialDriveWheelSpeeds(leftMotors[0].getSelectedSensorVelocity(), 
+                                            rightMotors[0].getSelectedSensorVelocity());
   }
 
   /**
@@ -183,6 +187,10 @@ public class Drivetrain extends SubsystemBase {
   **/
   public double getGyroYaw(){
     return gyro.getYaw();
+  }
+
+  public double getGyroPitch(){
+    return gyro.getPitch();
   }
 
 
