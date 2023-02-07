@@ -19,8 +19,8 @@ public class DriveConstants {
   public final static DifferentialDriveKinematics K_DRIVE_KINEMATICS = new DifferentialDriveKinematics  (DriveConstants.K_TRACK_WIDTH_METERS);
 
   // Max Velocity/Acceleration
-  public static final double K_MAX_SPEED_METER_PER_SECOND = .4788;
-  public static final double K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = .2;
+  public static final double K_MAX_SPEED_METER_PER_SECOND = 3;
+  public static final double K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
 
   // RAMSETE Parameters
   public static final double K_RAMSETE = 2;
