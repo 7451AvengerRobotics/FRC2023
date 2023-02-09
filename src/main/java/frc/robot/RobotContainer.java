@@ -24,6 +24,8 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstrai
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -123,11 +125,22 @@ public class RobotContainer {
           // Start at the origin facing the +X direction
           new Pose2d(0, 0, new Rotation2d(0)),
           // Pass through these two interior waypoints, making an 's' curve path
-          List.of(new Translation2d(1, 0), new Translation2d(2, 0)),
+          List.of(new Translation2d(1, 1), new Translation2d(2, 2)),
           // End 3 meters straight ahead of where we started, facing forward
-          new Pose2d(3, 0, new Rotation2d(0)),
+          new Pose2d(3, 3, new Rotation2d(0)),
           // Pass config
           config);
+
+        Trajectory trajectory2 =
+          TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(3, 3, new Rotation2d(-3.14)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(2, 2), new Translation2d(1, 1)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(0, 0, new Rotation2d(-3.14)),
+            // Pass config
+            config);
 
       drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
       drivetrain.resetGyro();
@@ -147,7 +160,26 @@ public class RobotContainer {
             new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
             drivetrain::tankDriveVolts,
             drivetrain);
+      RamseteCommand ramseteCommand1 =
+        new RamseteCommand(
+        trajectory2,
+        drivetrain::getPose,
+        new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA),
+        new SimpleMotorFeedforward(
+          DriveConstants.KS_VOLTS,
+          DriveConstants.KV_VOLT_SECONDS_PER_METER,
+          DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+          DriveConstants.K_DRIVE_KINEMATICS,
+          drivetrain::getWheelSpeeds,
+          new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
+          new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
+          drivetrain::tankDriveVolts,
+          drivetrain);
 
 
-    return ramseteCommand.andThen(() -> drivetrain.tankDriveVolts(0, 0));  }
+    return new SequentialCommandGroup(ramseteCommand,
+                                      new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)),
+                                      ramseteCommand1,
+                                      new RunCommand(() -> drivetrain.tankDriveVolts(0, 0))
+                                      );  }
 }
