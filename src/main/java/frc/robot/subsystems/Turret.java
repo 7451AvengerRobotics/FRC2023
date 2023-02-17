@@ -7,11 +7,11 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.TurretConstants;
 
-public class Turret {
+public class Turret extends SubsystemBase{
     public final TalonFX turret;
     public final TalonFXConfiguration turretConfig;
     boolean turretState;
@@ -21,7 +21,7 @@ public class Turret {
         turret.setNeutralMode(NeutralMode.Coast);
         turret.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         turret.configForwardSoftLimitThreshold(10000);//Values Subject To Change
-        turret.configReverseSoftLimitThreshold(10000);//Values subject to change
+        turret.configReverseSoftLimitThreshold(12000);//Values subject to change
         turret.configForwardSoftLimitEnable(true);
         turret.configReverseSoftLimitEnable(true);
         turretConfig = new TalonFXConfiguration();
