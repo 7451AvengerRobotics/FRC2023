@@ -9,6 +9,7 @@ public class TurretTestCommand extends CommandBase{
     public TurretTestCommand(Turret turret, double power){
         this.turret = turret;
         this.power = power;
+        addRequirements(turret);
     }
 
     @Override 
