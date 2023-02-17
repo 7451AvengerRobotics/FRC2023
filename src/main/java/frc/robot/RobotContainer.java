@@ -6,9 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TurretTestCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Turret;
 
 import java.util.List;
@@ -31,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
@@ -42,15 +41,10 @@ import frc.robot.commands.DriveTypes.ArcadeDrive;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivetrain drivetrain = new Drivetrain();
   private final XboxController controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
   private final Joystick buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
   private final Turret turret = new Turret();
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(ButtonConstants.CONTROLLER_PORT);
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -86,16 +80,15 @@ public class RobotContainer {
 
 
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-    
-    if(controller.getAButtonPressed()){
-      new TurretTestCommand(turret, 0.5);
-    }
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
+    turnTurretLeft.whileTrue(new TurretTestCommand(turret, 0.3));
+
+    JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
+    turnTurretRight.whileTrue(new TurretTestCommand(turret, -0.3));
+
+
+
+
   }
 
   public void robotPeriodic(){
