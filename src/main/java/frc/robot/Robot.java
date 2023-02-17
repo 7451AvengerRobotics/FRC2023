@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Turret;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,6 +22,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
   private Drivetrain drivetrain;
+  private Turret turret;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -32,6 +34,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     drivetrain = new Drivetrain();
+    turret = new Turret();
     
   }
 
@@ -50,7 +53,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
-    SmartDashboard.putNumber("Gyro Z-Axis", drivetrain.getGyroPitch());
+    SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

@@ -16,8 +16,8 @@ public class ButtonConstants {
    */
 
   // All Constants are subject to change once we figure out what each one does in the old code. 
-  public static final int LIFT_UP = 1;
-  public static final int LIFT_DOWN = 2;
+  public static final int TURN_TURRET_LEFT = 1;
+  public static final int TURN_TURRET_RIGHT = 2;
 
   public static final int INTAKE_EXTEND = 3;
   public static final int INTAKE_RETRACT = 4;
