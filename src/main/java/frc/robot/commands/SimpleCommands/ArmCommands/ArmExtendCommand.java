@@ -1,4 +1,4 @@
-package frc.robot.commands.SimpleCommands;
+package frc.robot.commands.SimpleCommands.ArmCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;

@@ -1,15 +1,15 @@
-package frc.robot.commands.SimpleCommands;
+package frc.robot.commands.SimpleCommands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
-public class ClawExtendCommand extends CommandBase{
+public class ClawRetractCommand extends CommandBase{
 
     private final Claw claw;
 
 
-    public ClawExtendCommand(Arm arm){
-        this.arm = arm;
-        addRequirements(arm);
+    public ClawRetractCommand(Claw claw){
+        this.claw = claw;
+        addRequirements(claw);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class ClawExtendCommand extends CommandBase{
 
     @Override
     public void execute(){
-        claw.extend();
+        claw.retract();
     }
 
     public void end(boolean interrupted){}
