@@ -17,7 +17,10 @@ public final class PortConstants {
   public static final int[] RIGHT_DRIVE = { 2, 3 };
 
   public static final int TestMotor = 7;
+  public static final int VirtualFourBar = 15;
   public static final int Gyro = 5;
   public static final int Turret = 6;
   public static final int[] Arm = {5, 6};
+  public static final int[] CLAW_PNEUMATIC = {10, 11};
+  public static final int Claw = 13;
 }

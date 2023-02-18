@@ -13,6 +13,9 @@ public class TurretTestCommand extends CommandBase{
         addRequirements(turret);
     }
 
+    @Override
+    public void initialize(){}
+
     @Override 
     public void execute(){
         turret.turn(power);
@@ -22,4 +25,10 @@ public class TurretTestCommand extends CommandBase{
     public void end(boolean interrupted){
         turret.turn(0);
     }
+
+    @Override
+    public boolean isFinished(){
+        return true;
+    }
 }
+
