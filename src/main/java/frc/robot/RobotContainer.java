@@ -6,9 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.SimpleCommands.ArmExtendCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmRetractCommand;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.VirtualFourBar;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 /**
@@ -49,6 +52,8 @@ public class RobotContainer {
   private final Joystick buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
   private final Turret turret = new Turret();
   private final Arm arm = new Arm();
+  private final Claw claw = new Claw();
+  private final VirtualFourBar bar = new VirtualFourBar();
 /* Initializing Robot Subsystems */
 
 
@@ -93,12 +98,14 @@ public class RobotContainer {
     JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
     JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
     JoystickButton extendArm = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
+    JoystickButton retractArm = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
     /*  Button Mapping */
 
     /*  Command Mapping */
     turnTurretLeft.whileTrue(new TurretTestCommand(turret, 0.3));
     turnTurretRight.whileTrue(new TurretTestCommand(turret, -0.3));
     extendArm.onTrue(new ArmExtendCommand(arm));
+    retractArm.onTrue(new ArmRetractCommand(arm));
     /*  Command Mapping */  
 
      
