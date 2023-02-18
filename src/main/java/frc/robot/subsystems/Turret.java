@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -74,6 +76,11 @@ public double getencoderValues(){
 public void turnWithEncoders(double counts) {
       turret.setSelectedSensorPosition(counts);
     }
+
+public void turretAdjust(double counts){
+    turret.set(TalonFXControlMode.Position, 100, DemandType.AuxPID, counts);
+}
+
 
 public void zeroSensors() {
 		turret.getSensorCollection().setIntegratedSensorPosition(0, TurretConstants.kTimeoutMs);
