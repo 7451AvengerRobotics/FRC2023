@@ -6,7 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.TurretTestCommand;
+import frc.robot.commands.SimpleCommands.ArmExtendCommand;
+import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.subsystems.Turret;
 
 import java.util.List;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 /**
@@ -40,11 +42,17 @@ import frc.robot.commands.DriveTypes.ArcadeDrive;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+
+  /* Initializing Robot Subsystems */
   private final Drivetrain drivetrain = new Drivetrain();
   private final XboxController controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
   private final Joystick buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
   private final Turret turret = new Turret();
+  private final Arm arm = new Arm();
+/* Initializing Robot Subsystems */
+
+
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -80,13 +88,20 @@ public class RobotContainer {
 
 
   private void configureBindings() {
+
+    /*  Button Mapping */
     JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
-    turnTurretLeft.whileTrue(new TurretTestCommand(turret, 0.3));
-
     JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
+    JoystickButton extendArm = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
+    /*  Button Mapping */
+
+    /*  Command Mapping */
+    turnTurretLeft.whileTrue(new TurretTestCommand(turret, 0.3));
     turnTurretRight.whileTrue(new TurretTestCommand(turret, -0.3));
+    extendArm.onTrue(new ArmExtendCommand(arm));
+    /*  Command Mapping */  
 
-
+     
 
 
   }
