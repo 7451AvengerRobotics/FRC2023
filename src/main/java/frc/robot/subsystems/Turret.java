@@ -1,21 +1,17 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.TurretConstants;
 
 public class Turret extends SubsystemBase{
     public final TalonFX turret;
-    public final TalonFXConfiguration turretConfig;
     boolean turretState;
     boolean firstCall;
     public Turret() {
@@ -23,43 +19,28 @@ public class Turret extends SubsystemBase{
         turret.setNeutralMode(NeutralMode.Coast);
         turret.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         turret.configForwardSoftLimitThreshold(10000);//Values Subject To Change
-        turret.configReverseSoftLimitThreshold(12000);//Values subject to change
+        turret.configReverseSoftLimitThreshold(-12000);//Values subject to change
         turret.configForwardSoftLimitEnable(true);
         turret.configReverseSoftLimitEnable(true);
-        turretConfig = new TalonFXConfiguration();
-        firstCall = false;
-        turretState = false;
 
-        turretConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        turretConfig.neutralDeadband = 0.001;
-        turretConfig.peakOutputForward = 0.7;
-        turretConfig.peakOutputReverse = -0.7;
+        turret.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 
+                0, 
+                TurretConstants.kTimeoutMs);
 
-        turretConfig.slot0.kP = TurretConstants.kGains_Distanc.kP;
-		turretConfig.slot0.kI = TurretConstants.kGains_Distanc.kI;
-		turretConfig.slot0.kD = TurretConstants.kGains_Distanc.kD;
-		turretConfig.slot0.kF = TurretConstants.kGains_Distanc.kF;
-		turretConfig.slot0.integralZone = TurretConstants.kGains_Distanc.kIzone;
-		turretConfig.slot0.closedLoopPeakOutput = TurretConstants.kGains_Distanc.kPeakOutput;
-		turretConfig.slot0.allowableClosedloopError = 0;
+        turret.configNominalOutputForward(0, TurretConstants.kTimeoutMs);
+		turret.configNominalOutputReverse(0, TurretConstants.kTimeoutMs);
+		turret.configPeakOutputForward(1, TurretConstants.kTimeoutMs);
+		turret.configPeakOutputReverse(-1, TurretConstants.kTimeoutMs);
 
-        int closedLoopTimeMs = 1;
-		turretConfig.slot0.closedLoopPeriod = closedLoopTimeMs;
-		turretConfig.slot1.closedLoopPeriod = closedLoopTimeMs;
-		turretConfig.slot2.closedLoopPeriod = closedLoopTimeMs;
-		turretConfig.slot3.closedLoopPeriod = closedLoopTimeMs;
+        turret.configAllowableClosedloopError(0, 
+        0, 
+        TurretConstants.kTimeoutMs);
 
-        turret.configAllSettings(turretConfig);
+        turret.config_kF(0, TurretConstants.kGains.kF, TurretConstants.kTimeoutMs);
+		turret.config_kP(0, TurretConstants.kGains.kP, TurretConstants.kTimeoutMs);
+		turret.config_kI(0, TurretConstants.kGains.kI, TurretConstants.kTimeoutMs);
+		turret.config_kD(0, TurretConstants.kGains.kD, TurretConstants.kTimeoutMs);
 
-        turret.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, TurretConstants.kTimeoutMs);
-		turret.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, TurretConstants.kTimeoutMs);
-		turret.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, TurretConstants.kTimeoutMs);
-		turret.setStatusFramePeriod(StatusFrame.Status_10_Targets, 20, TurretConstants.kTimeoutMs);
-		
-		/* Initialize */
-		firstCall = true;
-		turretState = false;
-		zeroSensors();
 
 
 
@@ -74,13 +55,8 @@ public double getencoderValues(){
 }
 
 public void turnWithEncoders(double counts) {
-      turret.setSelectedSensorPosition(counts);
-    }
-
-public void turretAdjust(double counts){
-    turret.set(TalonFXControlMode.Position, 100, DemandType.AuxPID, counts);
+    turret.set(TalonFXControlMode.Position, counts);
 }
-
 
 public void zeroSensors() {
 		turret.getSensorCollection().setIntegratedSensorPosition(0, TurretConstants.kTimeoutMs);

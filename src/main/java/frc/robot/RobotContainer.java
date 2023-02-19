@@ -11,7 +11,6 @@ import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
 import frc.robot.commands.SimpleCommands.ArmCommands.ArmRetractCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawExtendCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawRetractCommand;
-import frc.robot.commands.SimpleCommands.ClawCommands.ClawTestCommand;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommands.VirtualFourBarCommand;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
@@ -105,8 +104,6 @@ public class RobotContainer {
     JoystickButton retractArm = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
     JoystickButton retractClaw = new JoystickButton(buttonPanel, ButtonConstants.CLAW_RETRACT);
     JoystickButton extendClaw = new JoystickButton(buttonPanel, ButtonConstants.CLAW_EXTEND);
-    JoystickButton openClaw = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OPEN);
-    JoystickButton closeClaw = new JoystickButton(buttonPanel, ButtonConstants.CLAW_CLOSE);
     JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
     JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
     /*  Button Mapping */
@@ -118,8 +115,6 @@ public class RobotContainer {
     retractArm.onTrue(new ArmRetractCommand(arm));
     retractClaw.onTrue(new ClawRetractCommand(claw));
     extendClaw.onTrue(new ClawExtendCommand(claw));
-    openClaw.whileTrue(new ClawTestCommand(claw, 0.3));
-    closeClaw.whileTrue(new ClawTestCommand(claw, -0.3));
     barUp.whileTrue(new VirtualFourBarCommand(bar, 0.3));
     barDown.whileTrue(new VirtualFourBarCommand(bar, -0.3));
     /*  Command Mapping */  
