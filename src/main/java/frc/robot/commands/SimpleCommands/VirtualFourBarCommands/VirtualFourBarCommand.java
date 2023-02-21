@@ -5,11 +5,11 @@ import frc.robot.subsystems.VirtualFourBar;
 
 public class VirtualFourBarCommand extends CommandBase{
     private final VirtualFourBar bar;
-    private final double power;
-    public VirtualFourBarCommand(VirtualFourBar bar, double power){
+    private final double encoderPos;
+    public VirtualFourBarCommand(VirtualFourBar bar, double encoderPos){
         super();
         this.bar = bar;
-        this.power = power;
+        this.encoderPos = encoderPos;
         addRequirements(bar);
     }
 
@@ -18,7 +18,7 @@ public class VirtualFourBarCommand extends CommandBase{
 
     @Override 
     public void execute(){
-        bar.setPower(power);
+        bar.setPosition(encoderPos);
     }
     
     @Override
