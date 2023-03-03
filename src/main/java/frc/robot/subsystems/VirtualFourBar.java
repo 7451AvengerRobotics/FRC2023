@@ -17,7 +17,7 @@ public class VirtualFourBar extends SubsystemBase {
 
 
     public void setPower(double power){
-        vFBAR.set(power);
+        vFBAR.set(ControlMode.PercentOutput, power);
     }
 
     public void setPosition(double encoderPosition){

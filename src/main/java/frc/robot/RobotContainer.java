@@ -7,11 +7,6 @@ package frc.robot;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmRetractCommand;
-import frc.robot.commands.SimpleCommands.ClawCommands.ClawExtendCommand;
-import frc.robot.commands.SimpleCommands.ClawCommands.ClawRetractCommand;
-import frc.robot.commands.SimpleCommands.VirtualFourBarCommands.VirtualFourBarCommand;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -29,6 +24,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -50,13 +46,11 @@ import frc.robot.commands.DriveTypes.ArcadeDrive;
 public class RobotContainer {
 
   /* Initializing Robot Subsystems */
-  private final Drivetrain drivetrain = new Drivetrain();
-  private final XboxController controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
-  private final Joystick buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
-  private final Turret turret = new Turret();
-  private final Arm arm = new Arm();
-  private final Claw claw = new Claw();
-  private final VirtualFourBar bar = new VirtualFourBar();
+  private final Drivetrain drivetrain;
+  private final Turret turret;
+  private final XboxController controller;
+  private final Joystick buttonPanel;
+
 /* Initializing Robot Subsystems */
 
 
@@ -64,6 +58,11 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    drivetrain = new Drivetrain();
+    turret = new Turret();
+    controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
+    buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
+
     configureBindings();
     configureDriveTrain();
   }
@@ -87,7 +86,7 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
       new ArcadeDrive(
       drivetrain,
-      controller:: getLeftY,
+      controller:: getRightY,
       controller:: getRightX,
       controller:: getRightBumper));
   }
@@ -100,23 +99,13 @@ public class RobotContainer {
     /*  Button Mapping */
     JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
     JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
-    JoystickButton extendArm = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
-    JoystickButton retractArm = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
-    JoystickButton retractClaw = new JoystickButton(buttonPanel, ButtonConstants.CLAW_RETRACT);
-    JoystickButton extendClaw = new JoystickButton(buttonPanel, ButtonConstants.CLAW_EXTEND);
-    JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
-    JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
+
     /*  Button Mapping */
 
     /*  Command Mapping */
-    turnTurretLeft.whileTrue(new TurretTestCommand(turret, 0.3));
+    
     turnTurretRight.whileTrue(new TurretTestCommand(turret, -0.3));
-    extendArm.onTrue(new ArmExtendCommand(arm));
-    retractArm.onTrue(new ArmRetractCommand(arm));
-    retractClaw.onTrue(new ClawRetractCommand(claw));
-    extendClaw.onTrue(new ClawExtendCommand(claw));
-    barUp.whileTrue(new VirtualFourBarCommand(bar, 0.3));
-    barDown.whileTrue(new VirtualFourBarCommand(bar, -0.3));
+    turnTurretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
     /*  Command Mapping */  
 
      

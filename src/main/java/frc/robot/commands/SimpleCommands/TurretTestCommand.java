@@ -7,14 +7,14 @@ public class TurretTestCommand extends CommandBase{
     private final Turret turret;
     private final double power;
     public TurretTestCommand(Turret turret, double power){
-        super();
         this.turret = turret;
         this.power = power;
         addRequirements(turret);
     }
 
     @Override
-    public void initialize(){}
+    public void initialize(){
+    }
 
     @Override 
     public void execute(){
@@ -28,7 +28,7 @@ public class TurretTestCommand extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        return true;
+        return false;
     }
 }
 
