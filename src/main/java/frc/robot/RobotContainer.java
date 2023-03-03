@@ -6,8 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.SimpleCommands.ClawCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmRetractCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -25,7 +29,6 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -38,49 +41,58 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
+
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
 
   /* Initializing Robot Subsystems */
   private final Drivetrain drivetrain;
+  private final Arm arm;
+  private final Claw claw;
   private final VirtualFourBar bar;
   private final Turret turret;
   private final XboxController controller;
   private final Joystick buttonPanel;
 
-/* Initializing Robot Subsystems */
+  /* Initializing Robot Subsystems */
 
-
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
+    arm = new Arm();
+    claw = new Claw();
     bar = new VirtualFourBar();
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
-    
 
     configureBindings();
     configureDriveTrain();
   }
 
-
-
-
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureDriveTrain() {
@@ -88,133 +100,130 @@ public class RobotContainer {
     // will run whenever the drivetrain is not being used.
 
     drivetrain.setDefaultCommand(
-      new ArcadeDrive(
-      drivetrain,
-      controller:: getRightY,
-      controller:: getRightX,
-      controller:: getRightBumper));
+        new ArcadeDrive(
+            drivetrain,
+            controller::getRightY,
+            controller::getRightX,
+            controller::getRightBumper));
   }
-
-
-
 
   private void configureBindings() {
 
-    /*  Button Mapping */
+    /* Button Mapping */
+
     JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
     JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
-    JoystickButton barUP = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
+
+    JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
     JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
 
-    /*  Button Mapping */
+    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.CLAW_IN);
+    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
 
-    /*  Command Mapping */
-    
+    JoystickButton armExtend = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
+    JoystickButton armRetract = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
+    JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_TOGGLE);
+
+    /* Button Mapping */
+
+    /* Command Mapping */
+
     turnTurretRight.whileTrue(new TurretTestCommand(turret, 1));
     turnTurretLeft.whileTrue(new TurretTestCommand(turret, -1));
-    
-    barUP.whileTrue(new VirtualFourBarCommand(bar,0.3));
+
+    barUp.whileTrue(new VirtualFourBarCommand(bar, 0.3));
     barDown.whileTrue(new VirtualFourBarCommand(bar, -0.3));
-    /*  Command Mapping */  
 
-     
+    clawIn.whileTrue(new ClawCommand(claw, 0.3));
+    clawOut.whileTrue(new ClawCommand(claw, -0.3));
 
+    armExtend.onTrue(new ArmExtendCommand(arm));
+    armRetract.onTrue(new ArmRetractCommand(arm));
+    armToggle.onTrue(new ArmToggleCommand(arm));
+
+    /* Command Mapping */
 
   }
 
-  public void robotPeriodic(){
-    }
-  
-
-
-
-
+  public void robotPeriodic() {
+  }
 
   public Command getAutonomousCommand() {
-    //Create a voltage constraint to ensure we don't accelerate too fast
+    // Create a voltage constraint to ensure we don't accelerate too fast
 
-
-    var autoVoltageConstraint =
-      new DifferentialDriveVoltageConstraint(
-          new SimpleMotorFeedforward(
-              DriveConstants.KS_VOLTS,
-              DriveConstants.KV_VOLT_SECONDS_PER_METER,
-              DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-              DriveConstants.K_DRIVE_KINEMATICS,
-              DriveConstants.MAX_DRIVE_VOLTAGE);
-
-      //Create config for trajectory
-      TrajectoryConfig config =
-         new TrajectoryConfig(
-            DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED,
-            DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.K_DRIVE_KINEMATICS)
-            // Apply the voltage constraint
-            .addConstraint(autoVoltageConstraint);
-
-      // An example trajectory to follow.  All units in meters.
-      Trajectory exampleTrajectory =
-        TrajectoryGenerator.generateTrajectory(
-          // Start at the origin facing the +X direction
-          new Pose2d(0, 0, new Rotation2d(0)),
-          // Pass through these two interior waypoints, making an 's' curve path
-          List.of(new Translation2d(1, 1), new Translation2d(2, 2)),
-          // End 3 meters straight ahead of where we started, facing forward
-          new Pose2d(3, 3, new Rotation2d(0)),
-          // Pass config
-          config);
-
-        Trajectory trajectory2 =
-          TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(3, 3, new Rotation2d(-3.14)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(2, 2), new Translation2d(1, 1)),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(0, 0, new Rotation2d(-3.14)),
-            // Pass config
-            config);
-
-      drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
-      drivetrain.resetGyro();
-
-      RamseteCommand ramseteCommand =
-        new RamseteCommand(
-          exampleTrajectory,
-          drivetrain::getPose,
-          new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA),
-          new SimpleMotorFeedforward(
+    var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+        new SimpleMotorFeedforward(
             DriveConstants.KS_VOLTS,
             DriveConstants.KV_VOLT_SECONDS_PER_METER,
             DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-            DriveConstants.K_DRIVE_KINEMATICS,
-            drivetrain::getWheelSpeeds,
-            new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-            new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-            drivetrain::tankDriveVolts,
-            drivetrain);
-      RamseteCommand ramseteCommand1 =
-        new RamseteCommand(
+        DriveConstants.K_DRIVE_KINEMATICS,
+        DriveConstants.MAX_DRIVE_VOLTAGE);
+
+    // Create config for trajectory
+    TrajectoryConfig config = new TrajectoryConfig(
+        DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED,
+        DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(DriveConstants.K_DRIVE_KINEMATICS)
+        // Apply the voltage constraint
+        .addConstraint(autoVoltageConstraint);
+
+    // An example trajectory to follow. All units in meters.
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(1, 1), new Translation2d(2, 2)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(3, 3, new Rotation2d(0)),
+        // Pass config
+        config);
+
+    Trajectory trajectory2 = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(3, 3, new Rotation2d(-3.14)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(2, 2), new Translation2d(1, 1)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(0, 0, new Rotation2d(-3.14)),
+        // Pass config
+        config);
+
+    drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
+    drivetrain.resetGyro();
+
+    RamseteCommand ramseteCommand = new RamseteCommand(
+        exampleTrajectory,
+        drivetrain::getPose,
+        new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA),
+        new SimpleMotorFeedforward(
+            DriveConstants.KS_VOLTS,
+            DriveConstants.KV_VOLT_SECONDS_PER_METER,
+            DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+        DriveConstants.K_DRIVE_KINEMATICS,
+        drivetrain::getWheelSpeeds,
+        new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
+        new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
+        drivetrain::tankDriveVolts,
+        drivetrain);
+    RamseteCommand ramseteCommand1 = new RamseteCommand(
         trajectory2,
         drivetrain::getPose,
         new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA),
         new SimpleMotorFeedforward(
-          DriveConstants.KS_VOLTS,
-          DriveConstants.KV_VOLT_SECONDS_PER_METER,
-          DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-          DriveConstants.K_DRIVE_KINEMATICS,
-          drivetrain::getWheelSpeeds,
-          new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-          new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-          drivetrain::tankDriveVolts,
-          drivetrain);
-        
-
+            DriveConstants.KS_VOLTS,
+            DriveConstants.KV_VOLT_SECONDS_PER_METER,
+            DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+        DriveConstants.K_DRIVE_KINEMATICS,
+        drivetrain::getWheelSpeeds,
+        new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
+        new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
+        drivetrain::tankDriveVolts,
+        drivetrain);
 
     return new SequentialCommandGroup(ramseteCommand,
-                                      new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)),
-                                      ramseteCommand1,
-                                      new RunCommand(() -> drivetrain.tankDriveVolts(0, 0))
-                                      );  }
+        new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)),
+        ramseteCommand1,
+        new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)));
+  }
 }
