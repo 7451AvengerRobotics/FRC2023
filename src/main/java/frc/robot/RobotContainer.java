@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
+import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -47,6 +48,7 @@ public class RobotContainer {
 
   /* Initializing Robot Subsystems */
   private final Drivetrain drivetrain;
+  private final VirtualFourBar bar;
   private final Turret turret;
   private final XboxController controller;
   private final Joystick buttonPanel;
@@ -59,9 +61,11 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
+    bar = new VirtualFourBar();
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
+    
 
     configureBindings();
     configureDriveTrain();
@@ -99,13 +103,18 @@ public class RobotContainer {
     /*  Button Mapping */
     JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
     JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
+    JoystickButton barUP = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
+    JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
 
     /*  Button Mapping */
 
     /*  Command Mapping */
     
-    turnTurretRight.whileTrue(new TurretTestCommand(turret, -0.3));
-    turnTurretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
+    turnTurretRight.whileTrue(new TurretTestCommand(turret, 1));
+    turnTurretLeft.whileTrue(new TurretTestCommand(turret, -1));
+    
+    barUP.whileTrue(new VirtualFourBarCommand(bar,0.3));
+    barDown.whileTrue(new VirtualFourBarCommand(bar, -0.3));
     /*  Command Mapping */  
 
      
