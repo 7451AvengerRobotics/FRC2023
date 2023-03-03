@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 //import com.revrobotics.CANSparkMax;
 //import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -15,7 +18,8 @@ public class Claw extends SubsystemBase{
 
    
     private final DoubleSolenoid clawSolenoid;
-    //private final CANSparkMax clawMotor;
+    private final CANSparkMax clawMotorL;
+    private final CANSparkMax clawMotorR;
     private static boolean isExtended;
 
 
@@ -24,8 +28,8 @@ public class Claw extends SubsystemBase{
 
         
         clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, PortConstants.CLAW_PNEUMATIC[0], PortConstants.CLAW_PNEUMATIC[1]);
-
-        //clawMotor = new CANSparkMax(PortConstants.Claw, MotorType.kBrushless);
+        clawMotorL = new CANSparkMax(PortConstants.Claw[0], MotorType.kBrushless);
+        clawMotorR = new CANSparkMax(PortConstants.Claw[1], MotorType.kBrushless);
     }
 
 
@@ -49,9 +53,10 @@ public class Claw extends SubsystemBase{
         }
     }
 
-    // public void setPower(double power){
-    //     clawMotor.set(power);
-    // }
+    public void setPower(double power){
+        clawMotorL.set(power);
+        clawMotorR.set(power);
+    }
 
 
 }
