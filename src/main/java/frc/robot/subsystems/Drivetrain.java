@@ -70,10 +70,10 @@ public class Drivetrain extends SubsystemBase {
     rightPIDController = new PIDController(DriveConstants.KP_DRIVE_VELOCITY,0,0);
 
     //Configuring the motors to run based of encoders when we need them for path planner
-    leftMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-    leftMotors[1].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-    rightMotors[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-    rightMotors[1].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    leftMotors[0].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    leftMotors[1].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    rightMotors[0].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    rightMotors[1].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
 
     //Settings for motors to ensure they run properly
