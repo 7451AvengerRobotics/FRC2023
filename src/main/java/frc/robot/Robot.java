@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.VirtualFourBar;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,6 +24,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   private Drivetrain drivetrain;
   private Turret turret;
+  private VirtualFourBar bar;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -35,6 +37,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     drivetrain = new Drivetrain();
     turret = new Turret();
+    bar = new VirtualFourBar();
+
     
   }
 
@@ -54,6 +58,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
+    SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

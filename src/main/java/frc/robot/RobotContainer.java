@@ -6,12 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.SimpleCommands.ClawCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmRetractCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -37,8 +33,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
+// import frc.robot.subsystems.Arm;
+// import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 
@@ -55,8 +51,8 @@ public class RobotContainer {
 
   /* Initializing Robot Subsystems */
   private final Drivetrain drivetrain;
-  private final Arm arm;
-  private final Claw claw;
+//   private final Arm arm;
+//   private final Claw claw;
   private final VirtualFourBar bar;
   private final Turret turret;
   private final XboxController controller;
@@ -70,8 +66,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
-    arm = new Arm();
-    claw = new Claw();
+    // arm = new Arm();
+    // claw = new Claw();
     bar = new VirtualFourBar();
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
@@ -117,12 +113,12 @@ public class RobotContainer {
     JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
     JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
 
-    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.CLAW_IN);
-    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
+    // JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.CLAW_IN);
+    // JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
 
-    JoystickButton armExtend = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
-    JoystickButton armRetract = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
-    JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_TOGGLE);
+    // JoystickButton armExtend = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
+    // JoystickButton armRetract = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
+    // JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_TOGGLE);
 
     /* Button Mapping */
 
@@ -134,12 +130,12 @@ public class RobotContainer {
     barUp.whileTrue(new VirtualFourBarCommand(bar, 0.3));
     barDown.whileTrue(new VirtualFourBarCommand(bar, -0.3));
 
-    clawIn.whileTrue(new ClawCommand(claw, 0.3));
-    clawOut.whileTrue(new ClawCommand(claw, -0.3));
+    // clawIn.whileTrue(new ClawCommand(claw, 0.3));
+    // clawOut.whileTrue(new ClawCommand(claw, -0.3));
 
-    armExtend.onTrue(new ArmExtendCommand(arm));
-    armRetract.onTrue(new ArmRetractCommand(arm));
-    armToggle.onTrue(new ArmToggleCommand(arm));
+    // armExtend.onTrue(new ArmExtendCommand(arm));
+    // armRetract.onTrue(new ArmRetractCommand(arm));
+    // armToggle.onTrue(new ArmToggleCommand(arm));
 
     /* Command Mapping */
 

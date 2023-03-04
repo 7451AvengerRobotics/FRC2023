@@ -26,4 +26,9 @@ public class VirtualFourBar extends SubsystemBase {
         vFBAR.set(ControlMode.Position, encoderPosition);
     }
 
+    
+    public double getencoderValues() {
+        return vFBAR.getSelectedSensorPosition();
+    }
+
 }
