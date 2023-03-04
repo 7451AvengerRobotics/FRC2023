@@ -43,20 +43,26 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
+// import frc.robot.subsystems.Arm;
+// import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
+
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
 
   /* Initializing Robot Subsystems */
   private final Drivetrain drivetrain;
+//   private final Arm arm;
+//   private final Claw claw;
   private final VirtualFourBar bar;
   private final Turret turret;
   private final XboxController controller;
@@ -66,17 +72,18 @@ public class RobotContainer {
 
 /* Initializing Robot Subsystems */
 
-
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
+    // arm = new Arm();
+    // claw = new Claw();
     bar = new VirtualFourBar();
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
-    
 
     configureBindings();
     configureDriveTrain();
@@ -92,7 +99,6 @@ public class RobotContainer {
     Shuffleboard.getTab("Autonomous").add(chooser);
 
   }
-
 
   public Command loadPathPlannerTrajectoryToRamseteCommand(String filename, boolean resetOdometry){
     Trajectory trajectory;
@@ -126,14 +132,18 @@ public class RobotContainer {
   }
 
 
-
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureDriveTrain() {
@@ -141,47 +151,53 @@ public class RobotContainer {
     // will run whenever the drivetrain is not being used.
 
     drivetrain.setDefaultCommand(
-      new ArcadeDrive(
-      drivetrain,
-      controller:: getRightY,
-      controller:: getRightX,
-      controller:: getRightBumper));
+        new ArcadeDrive(
+            drivetrain,
+            controller::getRightY,
+            controller::getRightX,
+            controller::getRightBumper));
   }
-
-
-
 
   private void configureBindings() {
 
-    /*  Button Mapping */
+    /* Button Mapping */
+
     JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
     JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
-    JoystickButton barUP = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
+
+    JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
     JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
 
-    /*  Button Mapping */
+    // JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.CLAW_IN);
+    // JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
 
-    /*  Command Mapping */
-    
+    // JoystickButton armExtend = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
+    // JoystickButton armRetract = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
+    // JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_TOGGLE);
+
+    /* Button Mapping */
+
+    /* Command Mapping */
+
     turnTurretRight.whileTrue(new TurretTestCommand(turret, 1));
     turnTurretLeft.whileTrue(new TurretTestCommand(turret, -1));
-    
-    barUP.whileTrue(new VirtualFourBarCommand(bar,0.3));
+
+    barUp.whileTrue(new VirtualFourBarCommand(bar, 0.3));
     barDown.whileTrue(new VirtualFourBarCommand(bar, -0.3));
-    /*  Command Mapping */  
 
-     
+    // clawIn.whileTrue(new ClawCommand(claw, 0.3));
+    // clawOut.whileTrue(new ClawCommand(claw, -0.3));
 
+    // armExtend.onTrue(new ArmExtendCommand(arm));
+    // armRetract.onTrue(new ArmRetractCommand(arm));
+    // armToggle.onTrue(new ArmToggleCommand(arm));
+
+    /* Command Mapping */
 
   }
 
-  public void robotPeriodic(){
-    }
-  
-
-
-
-
+  public void robotPeriodic() {
+  }
 
   public Command getAutonomousCommand() {
     

@@ -17,12 +17,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.DriveConstants;
 
-
-
-
 public class Drivetrain extends SubsystemBase {
 
-  /*Calling the motors into arrays. Contains 4 falcons */
+  /* Calling the motors into arrays. Contains 4 falcons */
   protected final WPI_TalonFX[] leftMotors;
   protected final WPI_TalonFX[] rightMotors;
   private final DifferentialDrive differentialDrive;
@@ -30,12 +27,13 @@ public class Drivetrain extends SubsystemBase {
   private final DifferentialDriveOdometry odometry;
   Pose2d pose;
 
-  /*Calling the different items needed for the autonomous and differential drive */
+  /*
+   * Calling the different items needed for the autonomous and differential drive
+   */
   DifferentialDriveKinematics kinematics;
   SimpleMotorFeedforward feedForward;
   PIDController leftPIDController;
   PIDController rightPIDController;
-
 
   /**
    * this method is called when the DriveTrainSubsystem class is initialized.
@@ -43,7 +41,7 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     super();
 
-    /*Instantiating the Motors */
+    /* Instantiating the Motors */
     this.leftMotors = new WPI_TalonFX[] {
         new WPI_TalonFX(PortConstants.LEFT_DRIVE[0]),
         new WPI_TalonFX(PortConstants.LEFT_DRIVE[1])
@@ -53,21 +51,21 @@ public class Drivetrain extends SubsystemBase {
         new WPI_TalonFX(PortConstants.RIGHT_DRIVE[1])
     };
 
-    //Creating the differential drive and items needed for autonomous
+    // Creating the differential drive and items needed for autonomous
     differentialDrive = new DifferentialDrive(leftMotors[0], rightMotors[0]);
-    gyro = new Pigeon2(PortConstants.Gyro); 
-    odometry = new DifferentialDriveOdometry(this.getHeading(),  
-    leftMotors[0].getSelectedSensorPosition()/DriveConstants.conversionForFalconUnits,
-    rightMotors[0].getSelectedSensorPosition()/DriveConstants.conversionForFalconUnits);
+    gyro = new Pigeon2(PortConstants.Gyro);
+    odometry = new DifferentialDriveOdometry(this.getHeading(),
+        leftMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits,
+        rightMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits);
 
-    //Instantiating the Autonomous and Kinematics
+    // Instantiating the Autonomous and Kinematics
     kinematics = new DifferentialDriveKinematics(DriveConstants.K_TRACK_WIDTH_METERS);
-    feedForward = new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, 
-                                            DriveConstants.KV_VOLT_SECONDS_PER_METER, 
-                                            DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER);
+    feedForward = new SimpleMotorFeedforward(DriveConstants.KS_VOLTS,
+        DriveConstants.KV_VOLT_SECONDS_PER_METER,
+        DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER);
 
     leftPIDController = new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0);
-    rightPIDController = new PIDController(DriveConstants.KP_DRIVE_VELOCITY,0,0);
+    rightPIDController = new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0);
 
     //Configuring the motors to run based of encoders when we need them for path planner
     leftMotors[0].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -75,8 +73,7 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     rightMotors[1].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
-
-    //Settings for motors to ensure they run properly
+    // Settings for motors to ensure they run properly
     leftMotors[1].follow(leftMotors[0]);
     rightMotors[1].follow(rightMotors[0]);
 
@@ -88,16 +85,14 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].setNeutralMode(NeutralMode.Brake);
     rightMotors[1].setNeutralMode(NeutralMode.Brake);
 
-
   }
-
-
 
   @Override
   public void periodic() {
-    //Updating the odometry every 20 ms
-    odometry.update(this.getHeading(), leftMotors[0].getSelectedSensorPosition()/DriveConstants.conversionForFalconUnits,
-    rightMotors[0].getSelectedSensorPosition()/ DriveConstants.conversionForFalconUnits);
+    // Updating the odometry every 20 ms
+    odometry.update(this.getHeading(),
+        leftMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits,
+        rightMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits);
     differentialDrive.setSafetyEnabled(true);
     differentialDrive.setSafetyEnabled(false);
     differentialDrive.setExpiration(.1);
@@ -105,91 +100,97 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /*
-   * This will return the pose of the robot 
+   * This will return the pose of the robot
    */
-  public Pose2d getPose(){
+  public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
   /**
    * This will get the wheel speeds for the robot
-   * @return Differential Drive Wheel Speeds 
-  */
-  public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return new DifferentialDriveWheelSpeeds(leftMotors[0].getSelectedSensorVelocity(), 
-                                            rightMotors[0].getSelectedSensorVelocity());
+   * 
+   * @return Differential Drive Wheel Speeds
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(leftMotors[0].getSelectedSensorVelocity(),
+        rightMotors[0].getSelectedSensorVelocity());
   }
 
   /**
-  * This method will reset the odometry of the robot
-  * @param Pose2d Need the pose as a parameter
-  **/
-  public void resetOdometry(Pose2d pose){
+   * This method will reset the odometry of the robot
+   * 
+   * @param Pose2d Need the pose as a parameter
+   **/
+  public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    odometry.resetPosition(getHeading(), 
-    leftMotors[0].getSelectedSensorVelocity(), 
-    rightMotors[0].getSelectedSensorVelocity(),
-    pose);
+    odometry.resetPosition(getHeading(),
+        leftMotors[0].getSelectedSensorVelocity(),
+        rightMotors[0].getSelectedSensorVelocity(),
+        pose);
   }
 
   /**
-  * This method will set the robot into arcade drive
-  * @param speed Need the speed of the robot as a speed
-  * @param rotation the speed at which the robot will rotate
-  **/
-  public void arcadeDrive(double speed, double rotation){
+   * This method will set the robot into arcade drive
+   * 
+   * @param speed    Need the speed of the robot as a speed
+   * @param rotation the speed at which the robot will rotate
+   **/
+  public void arcadeDrive(double speed, double rotation) {
     differentialDrive.arcadeDrive(speed, rotation);
   }
 
   /**
-  * This method will set the robot into tank drive
-  * @param leftTrain Need the speed of the robot as a speed
-  * @param rightTrain the speed at which the robot will rotate
-  **/
-  public void tankDrive(double leftTrain, double rightTrain){
+   * This method will set the robot into tank drive
+   * 
+   * @param leftTrain  Need the speed of the robot as a speed
+   * @param rightTrain the speed at which the robot will rotate
+   **/
+  public void tankDrive(double leftTrain, double rightTrain) {
     differentialDrive.tankDrive(leftTrain, rightTrain);
     differentialDrive.feed();
   }
 
   /**
-  * This method will set the robot into tank drive
-  **/
-  public void resetEncoders(){
+   * This method will set the robot into tank drive
+   **/
+  public void resetEncoders() {
     leftMotors[0].setSelectedSensorPosition(0);
     leftMotors[1].setSelectedSensorPosition(0);
     rightMotors[0].setSelectedSensorPosition(0);
     rightMotors[1].setSelectedSensorPosition(0);
-    
+
   }
 
   /**
-  * @return Gryo's Angular Velocity/Turn Rate
-  **/
-  public double getTurnRate(){
+   * @return Gryo's Angular Velocity/Turn Rate
+   **/
+  public double getTurnRate() {
     return gyro.getAbsoluteCompassHeading();
   }
 
-
   /**
-  * Method will get the heading of the robot
-  @return Rotation2d in degrees
-  **/
-  public Rotation2d getHeading(){
-  double ypr[] = {0, 0, 0};
-  gyro.getYawPitchRoll(ypr);
-  return Rotation2d.fromDegrees((Math.IEEEremainder(ypr[0], 360)* -1.0d));
+   * Method will get the heading of the robot
+   * 
+   * @return Rotation2d in degrees
+   **/
+  public Rotation2d getHeading() {
+    double ypr[] = { 0, 0, 0 };
+    gyro.getYawPitchRoll(ypr);
+    return Rotation2d.fromDegrees((Math.IEEEremainder(ypr[0], 360) * -1.0d));
   }
 
   /**
-  * Method will get the Gyro's Yaw Rate.
-  @apiNote Cannot get piegon heading passively in another class. Have to create a method here
-  @return Gyro Yaw
-  **/
-  public double getGyroYaw(){
+   * Method will get the Gyro's Yaw Rate.
+   * 
+   * @apiNote Cannot get piegon heading passively in another class. Have to create
+   *          a method here
+   * @return Gyro Yaw
+   **/
+  public double getGyroYaw() {
     return gyro.getYaw();
   }
 
-  public double getGyroPitch(){
+  public double getGyroPitch() {
     return gyro.getPitch();
   }
 
@@ -198,9 +199,9 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].setVoltage(rightVolts);
     differentialDrive.feed();
   }
-  public void resetGyro(){
+
+  public void resetGyro() {
     gyro.setYaw(0);
   }
 
 }
-
