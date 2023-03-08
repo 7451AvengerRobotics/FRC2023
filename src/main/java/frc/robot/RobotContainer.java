@@ -8,45 +8,40 @@ import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
+import frc.robot.commands.SimpleCommands.ClawCommands.ClawExtend;
+import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
+import frc.robot.commands.SimpleCommands.ClawCommands.ClawRetract;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-// import frc.robot.subsystems.Arm;
-// import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Arm;
+//import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.commands.DriveTypes.ArcadeDrive;
+import frc.robot.commands.DriveTypes.TankDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -61,8 +56,8 @@ public class RobotContainer {
 
   /* Initializing Robot Subsystems */
   private final Drivetrain drivetrain;
-//   private final Arm arm;
-//   private final Claw claw;
+  private final Arm arm;
+  private final Claw claw;
   private final VirtualFourBar bar;
   private final Turret turret;
   private final XboxController controller;
@@ -78,8 +73,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
-    // arm = new Arm();
-    // claw = new Claw();
+    arm = new Arm();
+    claw = new Claw();
     bar = new VirtualFourBar();
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
@@ -89,11 +84,9 @@ public class RobotContainer {
     configureDriveTrain();
 
     chooser.addOption("Basic Auto", loadPathPlannerTrajectoryToRamseteCommand(
-      "C:"+File.separator+"SHISHIR"+File.separator+
-      "FRC"+File.separator+"FRC2023"+File.separator+
-      "src"+File.separator+"main"+File.separator+
-      "deploy"+File.separator+"pathplanner"+File.separator+
-      "generatedJSON"+File.separator+"BasicAuto.wpilib.json", 
+      "C:"+File.separator+"Users"+File.separator+"AvengerMechatronics"+File.separator+"FRC2023"+File.separator+
+      "src"+File.separator+"main"+File.separator+"deploy"+File.separator+"pathplanner"+File.separator+
+      "generatedJSON"+File.separator+"Basic Auto.wpilib.json", 
       true));
 
     Shuffleboard.getTab("Autonomous").add(chooser);
@@ -150,13 +143,23 @@ public class RobotContainer {
     // sets the command to drive the robot.
     // will run whenever the drivetrain is not being used.
 
-    drivetrain.setDefaultCommand(
-        new ArcadeDrive(
-            drivetrain,
-            controller::getRightY,
-            controller::getRightX,
-            controller::getRightBumper));
-  }
+    // drivetrain.setDefaultCommand(
+    //     new ArcadeDrive(
+    //         drivetrain,
+    //         controller::getLeftY,
+    //         controller::getRightX,
+    //         controller::getRightBumper,
+    //         controller:: getLeftBumper));
+
+  drivetrain.setDefaultCommand(
+    new TankDrive(
+        drivetrain,
+        controller::getLeftY,
+        controller::getRightX,
+        controller::getRightBumper,
+        controller:: getLeftBumper));
+}
+
 
   private void configureBindings() {
 
@@ -168,30 +171,32 @@ public class RobotContainer {
     JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
     JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
 
-    // JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.CLAW_IN);
-    // JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
+    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.CLAW_IN);
+    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
 
-    // JoystickButton armExtend = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
-    // JoystickButton armRetract = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
-    // JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_TOGGLE);
+    JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_EXTEND);
+    //JoystickButton armRetract = new JoystickButton(buttonPanel, ButtonConstants.ARM_RETRACT);
 
+    JoystickButton clawExtend = new JoystickButton(buttonPanel, ButtonConstants.CLAW_EXTEND);
+    JoystickButton clawRetract = new JoystickButton(buttonPanel, ButtonConstants.CLAW_RETRACT);
     /* Button Mapping */
 
     /* Command Mapping */
 
-    turnTurretRight.whileTrue(new TurretTestCommand(turret, 1));
-    turnTurretLeft.whileTrue(new TurretTestCommand(turret, -1));
+    turnTurretRight.whileTrue(new TurretTestCommand(turret, 0.5));
+    turnTurretLeft.whileTrue(new TurretTestCommand(turret, -0.5));
 
-    barUp.whileTrue(new VirtualFourBarCommand(bar, 0.3));
-    barDown.whileTrue(new VirtualFourBarCommand(bar, -0.3));
+    barUp.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3));
+    barDown.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));
 
-    // clawIn.whileTrue(new ClawCommand(claw, 0.3));
-    // clawOut.whileTrue(new ClawCommand(claw, -0.3));
+    clawIn.whileTrue(new ClawIntake(claw, 1));
+    clawOut.whileTrue(new ClawIntake(claw, -1));
 
-    // armExtend.onTrue(new ArmExtendCommand(arm));
-    // armRetract.onTrue(new ArmRetractCommand(arm));
-    // armToggle.onTrue(new ArmToggleCommand(arm));
+    armToggle.whileTrue(new ArmToggleCommand(arm));
+    //armRetract.whileTrue(new ArmRetractCommand(arm));
 
+    clawExtend.onTrue(new ClawExtend(claw));
+    clawRetract.onTrue(new ClawRetract(claw));
     /* Command Mapping */
 
   }

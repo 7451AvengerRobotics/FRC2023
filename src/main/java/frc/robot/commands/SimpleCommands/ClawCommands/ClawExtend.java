@@ -1,14 +1,13 @@
-package frc.robot.commands.SimpleCommands;
+package frc.robot.commands.SimpleCommands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 
-public class ClawCommand extends CommandBase{
+public class ClawExtend extends CommandBase{
     private final Claw claw;
-    private final double power;
-    public ClawCommand(Claw claw, double power){
+
+    public ClawExtend(Claw claw){
         this.claw = claw;
-        this.power = power;
         addRequirements(claw);
     }
 
@@ -18,12 +17,11 @@ public class ClawCommand extends CommandBase{
 
     @Override 
     public void execute(){
-        claw.setPower(power);
+        claw.extend();
     }
     
     @Override
     public void end(boolean interrupted){
-        claw.setPower(0);
     }
 
     @Override

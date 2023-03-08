@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
@@ -25,7 +26,8 @@ public class Robot extends TimedRobot {
   private Drivetrain drivetrain;
   private Turret turret;
   private VirtualFourBar bar;
-
+  private ColorSensor color;
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -37,9 +39,10 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     drivetrain = new Drivetrain();
     turret = new Turret();
-    bar = new VirtualFourBar();
+    bar = new VirtualFourBar(); 
+    color = new ColorSensor();
 
-    
+   
   }
 
   /**
@@ -55,10 +58,15 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+
+
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
+   // SmartDashboard.putString("Proxy", colorString);
+    SmartDashboard.putNumber("Color", color.detectColor());
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

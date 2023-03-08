@@ -9,47 +9,41 @@ import com.revrobotics.ColorMatch;
 
 public class ColorSensor extends SubsystemBase {
 
-    private final I2C.Port i2cPort = I2C.Port.kOnboard;
-    private final ColorSensorV3 color;
-    private final Color BlueColorTarget; 
-    private final Color RedColorTarget; 
-    private final ColorMatch colorMatcher;
-    private static ColorMatchResult ClosestColor;
-    private static Color detectedColor;
+    private final I2C.Port i2cPort;
+    private ColorSensorV3 color;
+    ColorMatchResult match;
+    private final ColorMatch colorMatch;
+    private final Color kTarget = new Color(255,0 , 255);
 
 
     public ColorSensor(){
         super();
 
+        this.i2cPort =  I2C.Port.kOnboard;
         color = new ColorSensorV3(i2cPort);
-        BlueColorTarget = new Color(0,0,255); //needs to change depending on the rgb value of the blue ball
-        RedColorTarget = new Color(255,0,0); //needs to change depending on the rgb value of the red ball
-        colorMatcher = new ColorMatch();
+        this.colorMatch = new ColorMatch();
+        colorMatch.addColorMatch(kTarget);
+        
+        
 
-        colorMatcher.addColorMatch(BlueColorTarget);
-        colorMatcher.addColorMatch(RedColorTarget);
+      
 
 
 
     }
 
-    public boolean checkifBlue(){
-      detectedColor = color.getColor();  
-      ClosestColor = colorMatcher.matchClosestColor(detectedColor);
 
-        if(ClosestColor.color == BlueColorTarget){
-            return true;
-        }
-            return false;
+
+
+
+    public int getProxmity(){
+       return color.getProximity();
     }
 
-    public boolean checkifRed(){
-      detectedColor = color.getColor();  
-      ClosestColor = colorMatcher.matchClosestColor(detectedColor);
-
-      if(ClosestColor.color == RedColorTarget){
-          return true;
-      }
-      return false;
+    public double detectColor(){
+        Color detectedColor = color.getColor();
+        return detectedColor.red;
     }
+    
+    
 }

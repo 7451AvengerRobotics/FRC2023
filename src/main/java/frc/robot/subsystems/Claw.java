@@ -27,9 +27,10 @@ public class Claw extends SubsystemBase{
         super();
 
         
-        clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, PortConstants.CLAW_PNEUMATIC[0], PortConstants.CLAW_PNEUMATIC[1]);
+        clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PortConstants.CLAW_PNEUMATIC[0], PortConstants.CLAW_PNEUMATIC[1]);
         clawMotorL = new CANSparkMax(PortConstants.Claw[0], MotorType.kBrushless);
         clawMotorR = new CANSparkMax(PortConstants.Claw[1], MotorType.kBrushless);
+        
     }
 
 
@@ -55,7 +56,7 @@ public class Claw extends SubsystemBase{
 
     public void setPower(double power){
         clawMotorL.set(power);
-        clawMotorR.set(power);
+        clawMotorR.set(-power);
     }
 
 

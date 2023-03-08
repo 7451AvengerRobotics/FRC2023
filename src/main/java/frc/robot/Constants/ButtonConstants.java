@@ -21,11 +21,13 @@ public class ButtonConstants {
   public static final int ARM_EXTEND = 3;
   public static final int ARM_RETRACT = 4;
 
-  public static final int CLAW_EXTEND = 5;
-  public static final int CLAW_RETRACT = 6;
+  public static final int CLAW_IN = 5;
+  public static final int CLAW_OUT = 6;
+
+  public static final int CLAW_EXTEND = 9;
+  public static final int CLAW_RETRACT = 10;
 
   public static final int VBAR_UP = 7;
   public static final int VBAR_DOWN = 8;
-  public static final int SHOOT_BUTTON = 9;
-  public static final int SHOOTFALLBACK = 10;    
+   
 }

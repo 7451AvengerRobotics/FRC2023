@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -14,6 +15,7 @@ public class VirtualFourBar extends SubsystemBase {
     public VirtualFourBar(){
         vFBAR = new WPI_TalonFX(PortConstants.VirtualFourBar);
         vFBAR.setNeutralMode(NeutralMode.Brake);
+        vFBAR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     }
 
 
