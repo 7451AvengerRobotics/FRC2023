@@ -15,7 +15,6 @@ public class ArcadeDrive extends CommandBase {
   private final BooleanSupplier turbo;
   private final SlewRateLimiter slewRate;
   private double x;
-  private double y;
   private double rotation;
   private double[] rollingInputX  = new double[DriveConstants.INPUT_ROLLING_AVERAGE_SAMPLE_SIZE];
   private int index = 0;
@@ -36,7 +35,7 @@ public class ArcadeDrive extends CommandBase {
     this.translationalXSupplier = translationalXSupplier;
     this.turn = turn;
     this.turbo = turbo;
-    slewRate = new SlewRateLimiter(12);
+    slewRate = new SlewRateLimiter(0.5);
 
     addRequirements(drive);
   }
@@ -52,31 +51,35 @@ public class ArcadeDrive extends CommandBase {
       index = 0;
     }
 
-    if(turbo.getAsBoolean() == true) {
-      drive.arcadeDrive(getAverage(rollingInputX) * 0.7, rotation);
-    }
-
-
-
-
-    // if (turbo.getAsBoolean() == true){
+    // if(turbo.getAsBoolean() == true) {
     //   double scalar = turbo.getAsBoolean() ? 1: 1;
-    //   drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
-    // } else{
-    //   double scalar = turbo.getAsBoolean() ? .5 : .7;
-    //   drive.arcadeDrive(slewRate.calculate(forward.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
+    //   drive.arcadeDrive(getAverage(rollingInputX) * -scalar, rotation);
+    // } else {
+    //   double scalar = turbo.getAsBoolean() ? 1: 1;
+    //   drive.arcadeDrive(getAverage(rollingInputX) * -scalar, scalar);
     // }
 
 
 
+
+    if (turbo.getAsBoolean() == true){
+      double scalar = turbo.getAsBoolean() ? 1: 1;
+      drive.arcadeDrive(slewRate.calculate(translationalXSupplier.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
+    } else{
+      double scalar = turbo.getAsBoolean() ? .5 : .7;
+      drive.arcadeDrive(slewRate.calculate(translationalXSupplier.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
+    }
+
+
+
   }
 
-  private double getAverage(double[] arr) {
-    double rtn = 0;
-    for(double i : arr) {
-      rtn+=i;
-    }
-    return rtn / arr.length;
-  }
+  // private double getAverage(double[] arr) {
+  //   double rtn = 0;
+  //   for(double i : arr) {
+  //     rtn+=i;
+  //   }
+  //   return rtn / arr.length;
+  // }
 
 }
