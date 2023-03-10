@@ -35,7 +35,7 @@ public class ArcadeDrive extends CommandBase {
     this.translationalXSupplier = translationalXSupplier;
     this.turn = turn;
     this.turbo = turbo;
-    slewRate = new SlewRateLimiter(0.5);
+    slewRate = new SlewRateLimiter(4);
 
     addRequirements(drive);
   }
@@ -43,7 +43,7 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void execute() {
     x = translationalXSupplier.getAsDouble();
-    rotation = turn.getAsDouble();
+    rotation =  turn.getAsDouble();
 
     rollingInputX[index] = x;
     index++;
