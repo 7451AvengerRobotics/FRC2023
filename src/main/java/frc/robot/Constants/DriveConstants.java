@@ -4,6 +4,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
+
+  public static final int INPUT_ROLLING_AVERAGE_SAMPLE_SIZE = 20;
   
   // Voltage
   public static final double KS_VOLTS = 0.083858;

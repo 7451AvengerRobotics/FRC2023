@@ -131,6 +131,8 @@ public class RobotContainer {
 
   }
 
+  
+
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
@@ -151,11 +153,7 @@ public class RobotContainer {
     // will run whenever the drivetrain is not being used.
 
     drivetrain.setDefaultCommand(
-        new ArcadeDrive(
-            drivetrain,
-            controller::getRightY,
-            controller::getRightX,
-            controller::getRightBumper));
+        new ArcadeDrive(drivetrain, controller::getRightY, controller::getRightX, controller::getRightBumper));
   }
 
   private void configureBindings() {
