@@ -2,7 +2,7 @@ package frc.robot.commands.DriveTypes;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DriveConstants;
+// import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
 import java.util.function.BooleanSupplier;
@@ -13,11 +13,11 @@ public class ArcadeDrive extends CommandBase {
   private final DoubleSupplier translationalXSupplier;
   private final DoubleSupplier turn;
   private final BooleanSupplier turbo;
-  private final SlewRateLimiter slewRate;
-  private double x;
-  private double rotation;
-  private double[] rollingInputX  = new double[DriveConstants.INPUT_ROLLING_AVERAGE_SAMPLE_SIZE];
-  private int index = 0;
+  // private double x;
+  // private double rotation;
+  // private double[] rollingInputX  = new double[DriveConstants.INPUT_ROLLING_AVERAGE_SAMPLE_SIZE];
+  SlewRateLimiter filter = new SlewRateLimiter(0.8);
+  // private int index = 0;
 
   /**
    * Creates a new DefaultDrive.
@@ -35,21 +35,20 @@ public class ArcadeDrive extends CommandBase {
     this.translationalXSupplier = translationalXSupplier;
     this.turn = turn;
     this.turbo = turbo;
-    slewRate = new SlewRateLimiter(4);
 
     addRequirements(drive);
   }
 
   @Override
   public void execute() {
-    x = translationalXSupplier.getAsDouble();
-    rotation =  turn.getAsDouble();
+    translationalXSupplier.getAsDouble();
+    turn.getAsDouble();
 
-    rollingInputX[index] = x;
-    index++;
-    if (index == DriveConstants.INPUT_ROLLING_AVERAGE_SAMPLE_SIZE) {
-      index = 0;
-    }
+    // rollingInputX[index] = x;
+    // index++;
+    // if (index == DriveConstants.INPUT_ROLLING_AVERAGE_SAMPLE_SIZE) {
+    //   index = 0;
+    // }
 
     // if(turbo.getAsBoolean() == true) {
     //   double scalar = turbo.getAsBoolean() ? 1: 1;
@@ -64,10 +63,10 @@ public class ArcadeDrive extends CommandBase {
 
     if (turbo.getAsBoolean() == true){
       double scalar = turbo.getAsBoolean() ? 1: 1;
-      drive.arcadeDrive(slewRate.calculate(translationalXSupplier.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
+      drive.arcadeDrive(filter.calculate(translationalXSupplier.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
     } else{
       double scalar = turbo.getAsBoolean() ? .5 : .7;
-      drive.arcadeDrive(slewRate.calculate(translationalXSupplier.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
+      drive.arcadeDrive(filter.calculate(translationalXSupplier.getAsDouble() * -scalar), turn.getAsDouble() * -scalar);
     }
 
 
