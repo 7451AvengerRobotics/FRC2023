@@ -85,6 +85,11 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].setNeutralMode(NeutralMode.Coast);
     rightMotors[1].setNeutralMode(NeutralMode.Coast);
 
+    leftMotors[0].configOpenloopRamp(1);
+    leftMotors[1].configOpenloopRamp(1);
+    rightMotors[0].configOpenloopRamp(1);
+    rightMotors[1].configOpenloopRamp(1);
+
   }
 
   @Override
