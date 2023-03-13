@@ -4,12 +4,13 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
+//import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -26,7 +27,11 @@ public class Robot extends TimedRobot {
   private Drivetrain drivetrain;
   private Turret turret;
   private VirtualFourBar bar;
-  private ColorSensor color;
+  private double myStartTime;
+  double myTime;
+  boolean myAutonFinished = false;
+  //private ColorSensor color;
+  
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,9 +45,13 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain();
     turret = new Turret();
     bar = new VirtualFourBar(); 
-    color = new ColorSensor();
-
-   
+    //color = new ColorSensor();
+    turret.zeroSensors();
+    bar.zeroSensors();
+    myStartTime = System.currentTimeMillis();
+    myTime = 0.0;
+    
+  
   }
 
   /**
@@ -61,12 +70,12 @@ public class Robot extends TimedRobot {
 
 
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
-    SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
+    // SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
+    //SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
-   // SmartDashboard.putString("Proxy", colorString);
-    SmartDashboard.putNumber("Color", color.detectColor());
 
+   // SmartDashboard.putString("Proxy", colorString);
+    // SmartDashboard.putNumber("Color", color.detectColor());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -83,19 +92,29 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+       m_autonomousCommand.schedule();
     }
+        
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
 
+    
+  //  myTime = (System.currentTimeMillis() - myStartTime)/1000; 
 
+  //  if(myTime>=0 && myTime < 5){
+  //   System.out.println("myTime" + myTime);
+  //   new DriveBackAuto(drivetrain, -0.3).schedule();;
+  //  }
+  // if(myTime>5){
+  //   myAutonFinished = true;
+  // }
 
-
-
-
+  // if(myAutonFinished){
+  //   new DriveBackAuto(drivetrain, 0).schedule();
+  // }
 
   }
 
