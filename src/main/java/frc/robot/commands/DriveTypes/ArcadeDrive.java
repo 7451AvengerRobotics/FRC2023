@@ -32,7 +32,7 @@ public class ArcadeDrive extends CommandBase {
     this.turn = right;
     this.turbo = turbo;
     this.slow = slow;
-    slewRate = new SlewRateLimiter(12);
+    slewRate = new SlewRateLimiter(18);
 
     addRequirements(drive);
   }

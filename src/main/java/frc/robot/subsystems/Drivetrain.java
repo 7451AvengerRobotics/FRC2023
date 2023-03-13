@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -85,6 +86,16 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].setNeutralMode(NeutralMode.Brake);
     rightMotors[1].setNeutralMode(NeutralMode.Brake);
 
+    leftMotors[0].configFactoryDefault();
+    leftMotors[1].setNeutralMode(NeutralMode.Brake);
+    rightMotors[0].setNeutralMode(NeutralMode.Brake);
+    rightMotors[1].setNeutralMode(NeutralMode.Brake);
+
+    leftMotors[0].configOpenloopRamp(2);
+    leftMotors[1].configOpenloopRamp(2);
+    rightMotors[0].configOpenloopRamp(2);
+    rightMotors[1].configOpenloopRamp(2);
+
   }
 
   @Override
@@ -93,11 +104,16 @@ public class Drivetrain extends SubsystemBase {
     odometry.update(this.getHeading(),
         leftMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits,
         rightMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits);
-    differentialDrive.setSafetyEnabled(true);
-    differentialDrive.setSafetyEnabled(false);
-    differentialDrive.setExpiration(.1);
+    // differentialDrive.setSafetyEnabled(true);
+    // differentialDrive.setSafetyEnabled(false);
+    // differentialDrive.setExpiration(.1);
     differentialDrive.feed();
   }
+
+
+
+
+
 
   /*
    * This will return the pose of the robot
@@ -179,6 +195,21 @@ public class Drivetrain extends SubsystemBase {
     return Rotation2d.fromDegrees((Math.IEEEremainder(ypr[0], 360) * -1.0d));
   }
 
+  public void setPower(double power){
+
+    leftMotors[0].set(ControlMode.PercentOutput, power);
+    rightMotors[0].set(ControlMode.PercentOutput, power);
+    
+}
+
+  public void setPowerLeft(double power){
+    leftMotors[0].set(ControlMode.PercentOutput, power);
+  }
+
+  public void setPowerRight(double power){
+    rightMotors[0].set(ControlMode.PercentOutput, power);
+  }
+
   /**
    * Method will get the Gyro's Yaw Rate.
    * 
@@ -199,6 +230,10 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].setVoltage(rightVolts);
     differentialDrive.feed();
   }
+
+ 
+
+
 
   public void resetGyro() {
     gyro.setYaw(0);

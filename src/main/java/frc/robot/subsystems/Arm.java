@@ -21,7 +21,6 @@ public class Arm extends SubsystemBase{
         armSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PortConstants.Arm[0],PortConstants.Arm[1]); 
         lockSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, PortConstants.Arm[2]);
         compressor.enableDigital();
-
         //need to change module id
     }
    public void stop(){
