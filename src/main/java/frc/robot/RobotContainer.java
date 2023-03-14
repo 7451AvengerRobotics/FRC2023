@@ -45,7 +45,6 @@ import frc.robot.subsystems.VirtualFourBar;
 public class RobotContainer {
 
   /* Initializing Robot Subsystems */
-  //Testing to see if the thing works with anthony
   public final  Drivetrain drivetrain;
   private final Arm arm;
   private final Claw claw;
