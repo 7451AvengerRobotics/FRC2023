@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 //import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Turret;
@@ -27,10 +28,8 @@ public class Robot extends TimedRobot {
   private Drivetrain drivetrain;
   private Turret turret;
   private VirtualFourBar bar;
-  private double myStartTime;
-  double myTime;
   boolean myAutonFinished = false;
-  //private ColorSensor color;
+  private Arm arm;
   
   
   /**
@@ -48,9 +47,7 @@ public class Robot extends TimedRobot {
     //color = new ColorSensor();
     turret.zeroSensors();
     bar.zeroSensors();
-    myStartTime = System.currentTimeMillis();
-    myTime = 0.0;
-    
+    arm = new Arm();
   
   }
 
@@ -70,12 +67,11 @@ public class Robot extends TimedRobot {
 
 
     CommandScheduler.getInstance().run();
-    // SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
-    //SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
+    SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
+    SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
+    SmartDashboard.putBoolean("ArmExtended", arm.getArmState());
 
-   // SmartDashboard.putString("Proxy", colorString);
-    // SmartDashboard.putNumber("Color", color.detectColor());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -100,21 +96,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
-    
-  //  myTime = (System.currentTimeMillis() - myStartTime)/1000; 
-
-  //  if(myTime>=0 && myTime < 5){
-  //   System.out.println("myTime" + myTime);
-  //   new DriveBackAuto(drivetrain, -0.3).schedule();;
-  //  }
-  // if(myTime>5){
-  //   myAutonFinished = true;
-  // }
-
-  // if(myAutonFinished){
-  //   new DriveBackAuto(drivetrain, 0).schedule();
-  // }
 
   }
 

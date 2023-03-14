@@ -9,19 +9,22 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 //import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ButtonConstants;
-import frc.robot.commands.AutoCommands.ComplexAuto;
 import frc.robot.commands.AutoCommands.DriveBackAuto;
 import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VFBAREncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
 import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
+import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -78,7 +81,7 @@ public class RobotContainer {
     //   "generatedJSON"+File.separator+"Basic Auto.wpilib.json", 
     //   true));
 
-    Shuffleboard.getTab("Autonomous").add(chooser);
+    Shuffleboard.getTab("SmartDashboard").add(chooser);
 
   }
 
@@ -142,6 +145,7 @@ public class RobotContainer {
     //         controller::getRightX,
     //         controller::getRightBumper,
     //         controller:: getLeftBumper));
+    
 
   drivetrain.setDefaultCommand(
     new TankDrive(
@@ -203,97 +207,12 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    
+    new SequentialCommandGroup(   
+      new ClawOuttake(claw, 0.5).withTimeout(2),
+      new WaitCommand(1),
+      new DriveBackAuto(drivetrain, 0.5).withTimeout(1).withTimeout(2));
 
-   //return chooser.getSelected();
-    
-    // var autoVoltageConstraint =
-    //   new DifferentialDriveVoltageConstraint(
-    //       new SimpleMotorFeedforward(
-    //           DriveConstants.KS_VOLTS,
-    //           DriveConstants.KV_VOLT_SECONDS_PER_METER,
-    //           DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-    //           DriveConstants.K_DRIVE_KINEMATICS,
-    //           DriveConstants.MAX_DRIVE_VOLTAGE);
-
-    //   //Create config for trajectory
-    //   TrajectoryConfig config =
-    //      new TrajectoryConfig(
-    //         DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED,
-    //         DriveConstants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-    //         // Add kinematics to ensure max speed is actually obeyed
-    //         .setKinematics(DriveConstants.K_DRIVE_KINEMATICS)
-    //         // Apply the voltage constraint
-    //         .addConstraint(autoVoltageConstraint);
-
-    //   // An example trajectory to follow.  All units in meters.
-    //   Trajectory exampleTrajectory =
-    //     TrajectoryGenerator.generateTrajectory(
-    //       // Start at the origin facing the +X direction
-    //       new Pose2d(0, 0, new Rotation2d(0)),
-    //       // Pass through these two interior waypoints, making an 's' curve path
-    //       List.of(new Translation2d(1, 1), new Translation2d(2, 2)),
-    //       // End 3 meters straight ahead of where we started, facing forward
-    //       new Pose2d(3, 3, new Rotation2d(0)),
-    //       // Pass config
-    //       config);
-
-    //     Trajectory trajectory2 =
-    //       TrajectoryGenerator.generateTrajectory(
-    //         // Start at the origin facing the +X direction
-    //         new Pose2d(3, 3, new Rotation2d(-3.14)),
-    //         // Pass through these two interior waypoints, making an 's' curve path
-    //         List.of(new Translation2d(2, 2), new Translation2d(1, 1)),
-    //         // End 3 meters straight ahead of where we started, facing forward
-    //         new Pose2d(0, 0, new Rotation2d(-3.14)),
-    //         // Pass config
-    //         config);
-
-    //   drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
-    //   drivetrain.resetGyro();
-
-    //   RamseteCommand ramseteCommand =
-    //     new RamseteCommand(
-    //       exampleTrajectory,
-    //       drivetrain::getPose,
-    //       new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA),
-    //       new SimpleMotorFeedforward(
-    //         DriveConstants.KS_VOLTS,
-    //         DriveConstants.KV_VOLT_SECONDS_PER_METER,
-    //         DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-    //         DriveConstants.K_DRIVE_KINEMATICS,
-    //         drivetrain::getWheelSpeeds,
-    //         new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-    //         new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-    //         drivetrain::tankDriveVolts,
-    //         drivetrain);
-    //   RamseteCommand ramseteCommand1 =
-    //     new RamseteCommand(
-    //     trajectory2,
-    //     drivetrain::getPose,
-    //     new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA),
-    //     new SimpleMotorFeedforward(
-    //       DriveConstants.KS_VOLTS,
-    //       DriveConstants.KV_VOLT_SECONDS_PER_METER,
-    //       DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-    //       DriveConstants.K_DRIVE_KINEMATICS,
-    //       drivetrain::getWheelSpeeds,
-    //       new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-    //       new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0),
-    //       drivetrain::tankDriveVolts,
-    //       drivetrain);
-        
-
-
-    // return new SequentialCommandGroup(ramseteCommand,
-    //                                   new RunCommand(() -> drivetrain.tankDriveVolts(0, 0)),
-    //                                   ramseteCommand1,
-    //                                   new RunCommand(() -> drivetrain.tankDriveVolts(0, 0))
-    //                                   );  }
-
-   return new DriveBackAuto(drivetrain, -0.3).withTimeout(1.78).andThen(new DriveBackAuto(drivetrain, 0));
-   //return new ComplexAuto(arm, drivetrain, 0.5, claw, 0.5); 
-   //return new ClawOuttake(claw, -1).withTimeout(2).andThen(new ClawOuttake(claw, 0));
+   return null;
     
 }
 }

@@ -50,9 +50,9 @@ public class Turret extends SubsystemBase {
         turret.set(ControlMode.PercentOutput, power);
     }
 
-    // public double getencoderValues() {
-    //     return turret.getSelectedSensorPosition();
-    // }
+    public double getencoderValues() {
+        return turret.getSelectedSensorPosition();
+    }
 
     public void turnWithEncoders(double counts) {
         turret.set(TalonFXControlMode.Position, counts);

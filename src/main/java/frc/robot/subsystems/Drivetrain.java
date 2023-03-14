@@ -65,8 +65,6 @@ public class Drivetrain extends SubsystemBase {
         DriveConstants.KV_VOLT_SECONDS_PER_METER,
         DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER);
 
-    leftPIDController = new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0);
-    rightPIDController = new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0);
 
     //Configuring the motors to run based of encoders when we need them for path planner
     leftMotors[0].configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -81,17 +79,17 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].setInverted(true);
     rightMotors[1].setInverted(InvertType.FollowMaster);
 
-    leftMotors[0].setNeutralMode(NeutralMode.Coast);
-    leftMotors[1].setNeutralMode(NeutralMode.Coast);
-    rightMotors[0].setNeutralMode(NeutralMode.Coast);
-    rightMotors[1].setNeutralMode(NeutralMode.Coast);
+    // leftMotors[0].setNeutralMode(NeutralMode.Coast);
+    // leftMotors[1].setNeutralMode(NeutralMode.Coast);
+    // rightMotors[0].setNeutralMode(NeutralMode.Coast);
+    // rightMotors[1].setNeutralMode(NeutralMode.Coast);
 
-    leftMotors[0].configOpenloopRamp(1);
-    leftMotors[1].configOpenloopRamp(1);
-    rightMotors[0].configOpenloopRamp(1);
-    rightMotors[1].configOpenloopRamp(1);
+    // leftMotors[0].configOpenloopRamp(1);
+    // leftMotors[1].configOpenloopRamp(1);
+    // rightMotors[0].configOpenloopRamp(1);
+    // rightMotors[1].configOpenloopRamp(1);
 
-    leftMotors[0].configFactoryDefault();
+    // leftMotors[0].configFactoryDefault();
     leftMotors[1].setNeutralMode(NeutralMode.Brake);
     rightMotors[0].setNeutralMode(NeutralMode.Brake);
     rightMotors[1].setNeutralMode(NeutralMode.Brake);

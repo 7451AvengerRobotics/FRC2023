@@ -60,5 +60,9 @@ public class Arm extends SubsystemBase{
     lockSolenoid.set(true);
    }
 
+   public boolean getArmState(){
+    return isExtended;
+   }
+
 }
 
