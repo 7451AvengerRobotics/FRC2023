@@ -30,6 +30,7 @@ import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.AutoBalance;
 import frc.robot.subsystems.Claw;
 //import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -231,6 +232,7 @@ public class RobotContainer {
       new ClawOuttake(claw, 0.5).withTimeout(2),
       new WaitCommand(1),
       new DriveBackAuto(drivetrain, 0.5).withTimeout(1).withTimeout(2));
+      new AutoBalance();
 
    return null;
     

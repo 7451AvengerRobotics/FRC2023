@@ -26,6 +26,9 @@ public class Drivetrain extends SubsystemBase {
   private final DifferentialDrive differentialDrive;
   private final Pigeon2 gyro;
   private final DifferentialDriveOdometry odometry;
+  static boolean autobalanceXMode;
+  static final double kOffBalanceAngleThresholdDegrees = 10;
+  static final double kOnBalanceAngleThresholdDegrees = 5;
   Pose2d pose;
 
   /*
