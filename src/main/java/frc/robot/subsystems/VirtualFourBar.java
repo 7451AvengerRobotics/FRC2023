@@ -20,15 +20,19 @@ public class VirtualFourBar extends SubsystemBase {
         vFBAR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         
         vFBAR.setSensorPhase(true);
-        vFBAR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);  
-        vFBAR.config_kP(0, getencoderValues());
-        vFBAR.setSelectedSensorPosition(getencoderValues());      
+        vFBAR.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TurretConstants.kTimeoutMs);  
+        vFBAR.selectProfileSlot(0, 0);
+        vFBAR.setSelectedSensorPosition(0, 0,TurretConstants.kTimeoutMs);  
 
-        vFBAR.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, TurretConstants.kTimeoutMs);
         vFBAR.configForwardSoftLimitThreshold(98590);
         vFBAR.configReverseSoftLimitThreshold(-300);//Values subject to change
         vFBAR.configForwardSoftLimitEnable(true);
         vFBAR.configReverseSoftLimitEnable(true);
+
+        vFBAR.config_kP(0, 0.02);
+        vFBAR.config_kI(0, 0);
+        vFBAR.config_kD(0, 9);
+
         //Directly forward is 46511
 
 
@@ -40,6 +44,7 @@ public class VirtualFourBar extends SubsystemBase {
     }
 
     public void setPosition(double encoderPosition){
+ 
         vFBAR.set(ControlMode.Position, encoderPosition);
     }
 

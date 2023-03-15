@@ -17,7 +17,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.commands.AutoCommands.DriveBackAuto;
+import frc.robot.commands.ComplexCommands.ComplexArmVfBar;
 import frc.robot.commands.DriveTypes.TankDrive;
+import frc.robot.commands.SimpleCommands.SolenoidExtendCommand;
+import frc.robot.commands.SimpleCommands.SolenoidRetractCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VFBAREncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
@@ -160,36 +163,54 @@ public class RobotContainer {
 
     /* Button Mapping */
 
-    JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
-    JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
-
-    JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
-    JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
-
-    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.CLAW_IN);
-    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
-
+    JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.barUp);
+    JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.barDown);
+    JoystickButton MidCubePreset = new JoystickButton(buttonPanel, ButtonConstants.MidConePreset);
+    JoystickButton HighCubePreset = new JoystickButton(buttonPanel, ButtonConstants.HighCubePreset);
+    JoystickButton grabObject = new JoystickButton(buttonPanel, ButtonConstants.grabbingPreset);
+    JoystickButton ResetPreset = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
     JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_TOGGLE);
     JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
 
-    JoystickButton armWitEncoder = new JoystickButton(buttonPanel, 10);
+
+    //JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
+
+    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.clawIn);
+    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.clawOut);
     /* Button Mapping */
 
     /* Command Mapping */
 
-    turnTurretRight.whileTrue(new TurretTestCommand(turret, 1));
-    turnTurretLeft.whileTrue(new TurretTestCommand(turret, -1));
 
-    barUp.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));
-    barDown.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3));
+    barUp.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3)); //1
+    barDown.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //2
 
-    clawIn.whileTrue(new ClawIntake(claw, 1));
-    clawOut.whileTrue(new ClawIntake(claw, -1));
-    clawToggle.onTrue(new ClawToggle(claw));
 
-    armToggle.whileTrue(new ArmToggleCommand(arm));
+    HighCubePreset.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
+    MidCubePreset.onTrue(new VFBAREncoder(bar, arm, 30786)); //4
+    grabObject.onTrue(new VFBAREncoder(bar, arm, 68027).withTimeout(1.5).andThen(new SolenoidRetractCommand(arm)));
+    ResetPreset.onTrue(new VFBAREncoder(bar, arm, 0)); //5
 
-    armWitEncoder.whileTrue(new VFBAREncoder(bar, arm, 67169));
+    clawIn.whileTrue(new ClawIntake(claw, 1)); //9
+    clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
+
+    armToggle.whileTrue(new ArmToggleCommand(arm)); //6
+    clawToggle.whileTrue(new ClawToggle(claw));
+
+
+    // turnTurretRight.whileTrue(new TurretTestCommand(turret, 0.3));
+    // turnTurretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
+
+    // // barUp.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));
+    // barDown.onTrue(new VFBAREncoder(bar, arm, 0));
+
+    // clawIn.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3));
+    // clawOut.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));
+    // clawToggle.onTrue(new ClawToggle(claw));
+
+    // armToggle.whileTrue(new ArmToggleCommand(arm));
+
+    // armWitEncoder.onTrue(new VFBAREncoder(bar, arm, 40000));
     //31714 is for cone high
     //1813 is for cube high
     //13393 for cube mid

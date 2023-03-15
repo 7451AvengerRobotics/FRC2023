@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
   private Turret turret;
   private VirtualFourBar bar;
   boolean myAutonFinished = false;
-  private Arm arm;
+ // private Arm arm;
   
   
   /**
@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
     //color = new ColorSensor();
     turret.zeroSensors();
     bar.zeroSensors();
-    arm = new Arm();
+    //arm = new Arm();
   
   }
 
@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
-    SmartDashboard.putBoolean("ArmExtended", arm.getArmState());
+    //SmartDashboard.putBoolean("ArmExtended", arm.getArmState());
 
   }
 

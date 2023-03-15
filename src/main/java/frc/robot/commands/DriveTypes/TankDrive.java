@@ -46,11 +46,11 @@ public class TankDrive extends CommandBase {
   @Override
   public void execute() {
     if (turbo.getAsBoolean() == true){
-    double scalar = turbo.getAsBoolean() ? 0.6 : 0.6;
+    double scalar = turbo.getAsBoolean() ? 1 : 1;
     drive.tankDrive(right.getAsDouble() * scalar, left.getAsDouble() * scalar);
     SmartDashboard.putNumber("DriveTrain Power", left.getAsDouble());
     }else{
-    double scalar = turbo.getAsBoolean() ? 0.5 : 0.5;
+    double scalar = turbo.getAsBoolean() ? 0.7 : 0.7;
     drive.tankDrive(right.getAsDouble() * scalar, left.getAsDouble() * scalar);
     SmartDashboard.putNumber("DriveTrain Power", left.getAsDouble());
     }

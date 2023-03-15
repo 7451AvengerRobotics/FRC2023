@@ -91,13 +91,14 @@ public class Drivetrain extends SubsystemBase {
 
     // leftMotors[0].configFactoryDefault();
     leftMotors[1].setNeutralMode(NeutralMode.Brake);
+    leftMotors[0].setNeutralMode(NeutralMode.Brake);
     rightMotors[0].setNeutralMode(NeutralMode.Brake);
     rightMotors[1].setNeutralMode(NeutralMode.Brake);
 
-    leftMotors[0].configOpenloopRamp(2);
-    leftMotors[1].configOpenloopRamp(2);
-    rightMotors[0].configOpenloopRamp(2);
-    rightMotors[1].configOpenloopRamp(2);
+    leftMotors[0].configOpenloopRamp(1);
+    leftMotors[1].configOpenloopRamp(1);
+    rightMotors[0].configOpenloopRamp(1);
+    rightMotors[1].configOpenloopRamp(1);
 
   }
 
