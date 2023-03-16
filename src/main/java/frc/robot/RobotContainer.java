@@ -122,7 +122,7 @@ public class RobotContainer {
     AutoConstants.twoCubeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(1));
     AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(
     new TurretTestCommand(turret, 0.3), 
-    new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(2)));
+    new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(1.3)));
     AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(
     new ClawIntake(claw, 0.5), 
     new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
