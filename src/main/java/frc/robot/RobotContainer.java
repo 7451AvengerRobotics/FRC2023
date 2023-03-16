@@ -18,13 +18,16 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.AutoCommands.BalanceCommand;
 import frc.robot.commands.AutoCommands.ComplexAuto;
+import frc.robot.commands.AutoCommands.GetOnRamp;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
@@ -110,7 +113,8 @@ public class RobotContainer {
   }
 
   public void setBasicChargeAutoMap() {
-    AutoConstants.basicChargeAuto.put("spit", new ClawOuttake(claw, 0.5).withTimeout(2));
+    AutoConstants.basicChargeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(2));
+    AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(new GetOnRamp(drivetrain), new BalanceCommand(0.39)));
   }
 
   
@@ -207,7 +211,7 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
 
   public Command getAutonomousCommand() {
 
-   return null;
+    return chooser.getSelected();
 
 }
 }
