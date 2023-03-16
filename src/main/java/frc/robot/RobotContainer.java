@@ -21,7 +21,6 @@ import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VFBAREncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
 import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
