@@ -25,7 +25,7 @@ public class SolenoidRetractCommand extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        return true;
+        return false;
     }
 }
 

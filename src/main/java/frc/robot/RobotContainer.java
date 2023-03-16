@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-//import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -39,19 +38,17 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.AutoCommands.DriveBackAuto;
+import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VFBAREncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.AutoBalance;
 import frc.robot.subsystems.Claw;
-//import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
@@ -75,6 +72,7 @@ public class RobotContainer {
   private final Turret turret;
   private final XboxController controller;
   private final Joystick buttonPanel;
+  private Boolean driveState;
 
   
 
@@ -113,6 +111,7 @@ public class RobotContainer {
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
+    driveState = false;
 
     setBasicChargeAutoMap();
     configureBindings();
@@ -126,6 +125,7 @@ public class RobotContainer {
   public void setBasicChargeAutoMap() {
     AutoConstants.basicChargeAuto.put("spit", new ClawOuttake(claw, 0.5).withTimeout(2));
   }
+
   
 
   
@@ -146,25 +146,36 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureDriveTrain() {
-    // sets the command to drive the robot.
-    // will run whenever the drivetrain is not being used.
 
+/*
+Sets the state of the type of drivetrain. For example if driver wants Arcade than the driver presses the A button to enter arcade mode.
+If the driver presses the B button than the drivtrain will reset back to Tank Drive
+*/
+    if(controller.getAButtonPressed()){
+      driveState = true;
+    }
 
-    // drivetrain.setDefaultCommand(
-    //     new ArcadeDrive(
-    //         drivetrain,
-    //         controller::getLeftY,
-    //         controller::getRightX,
-    //         controller::getRightBumper,
-    //         controller:: getLeftBumper));
-    
+    if(controller.getBButtonPressed()){
+      driveState = false;
+    }
 
-  drivetrain.setDefaultCommand(
-    new TankDrive(
-        drivetrain,
-        controller::getLeftY,
-        controller::getRightY,
-        controller::getRightBumper));
+    if(driveState == true){
+      drivetrain.setDefaultCommand(
+        new ArcadeDrive(
+            drivetrain,
+            arm,
+            controller::getLeftY,
+            controller::getRightX,
+            controller::getRightBumper,
+            controller:: getLeftBumper));
+    }else{
+      drivetrain.setDefaultCommand(
+        new TankDrive(
+          drivetrain,
+          controller::getLeftY,
+          controller::getRightY,
+          controller::getRightBumper));
+    }
 }
 
 
@@ -173,44 +184,34 @@ public class RobotContainer {
 
     /* Button Mapping */
 
-    JoystickButton turnTurretLeft = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_LEFT);
-    JoystickButton turnTurretRight = new JoystickButton(buttonPanel, ButtonConstants.TURN_TURRET_RIGHT);
-
-    JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.VBAR_UP);
-    JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.VBAR_DOWN);
-
-    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.CLAW_IN);
-    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
-
-    JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_TOGGLE);
+    JoystickButton groundState = new JoystickButton(buttonPanel, ButtonConstants.Ground);
+    JoystickButton MidCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
+    JoystickButton MidCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
+    JoystickButton HighCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
+    JoystickButton HighCone = new JoystickButton(buttonPanel, ButtonConstants.HighCone);
+    JoystickButton ResetEncoder = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
     JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
+    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
+    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
+    JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
+    JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
 
-    JoystickButton armWitEncoder = new JoystickButton(buttonPanel, 10);
-    /* Button Mapping */
 
     /* Command Mapping */
+    MidCone.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //2
+    MidCube.onTrue(new VFBAREncoder(bar, arm, 30786)); //4
 
-    turnTurretRight.whileTrue(new TurretTestCommand(turret, 1));
-    turnTurretLeft.whileTrue(new TurretTestCommand(turret, -1));
+    HighCube.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
+    HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
+    groundState.onTrue(new VFBAREncoder(bar, arm, 68027));
+    ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
 
-    barUp.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));
-    barDown.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3));
+    clawIn.whileTrue(new ClawIntake(claw, 1)); //9
+    clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
+    clawToggle.whileTrue(new ClawToggle(claw));
 
-    clawIn.whileTrue(new ClawIntake(claw, 1));
-    clawOut.whileTrue(new ClawIntake(claw, -1));
-    clawToggle.onTrue(new ClawToggle(claw));
-
-    armToggle.whileTrue(new ArmToggleCommand(arm));
-
-    armWitEncoder.whileTrue(new VFBAREncoder(bar, arm, 67169));
-    //31714 is for cone high
-    //1813 is for cube high
-    //13393 for cube mid
-
-
-
-    
-    /* Command Mapping */
+    turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
+    turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
 
   }
 
