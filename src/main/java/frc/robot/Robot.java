@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 //import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Turret;
@@ -46,9 +45,7 @@ public class Robot extends TimedRobot {
     bar = new VirtualFourBar(); 
     //color = new ColorSensor();
     turret.zeroSensors();
-    bar.zeroSensors();
-    //arm = new Arm();
-  
+    bar.zeroSensors();  
   }
 
   /**
@@ -70,8 +67,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
-    //SmartDashboard.putBoolean("ArmExtended", arm.getArmState());
-
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

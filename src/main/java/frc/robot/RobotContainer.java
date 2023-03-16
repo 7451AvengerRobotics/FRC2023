@@ -4,35 +4,43 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-//import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ButtonConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.AutoCommands.DriveBackAuto;
-import frc.robot.commands.ComplexCommands.ComplexArmVfBar;
+import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.DriveTypes.TankDrive;
-import frc.robot.commands.SimpleCommands.SolenoidExtendCommand;
-import frc.robot.commands.SimpleCommands.SolenoidRetractCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VFBAREncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.AutoBalance;
 import frc.robot.subsystems.Claw;
-//import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
@@ -56,6 +64,7 @@ public class RobotContainer {
   private final Turret turret;
   private final XboxController controller;
   private final Joystick buttonPanel;
+  private Boolean driveState;
 
   SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -73,47 +82,49 @@ public class RobotContainer {
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
+    driveState = false;
 
     configureBindings();
     configureDriveTrain();
     getAutonomousCommand();
 
-    // chooser.addOption("Basic Auto", loadPathPlannerTrajectoryToRamseteCommand(
-    //   "C:"+File.separator+"Users"+File.separator+"AvengerMechatronics"+File.separator+"FRC2023"+File.separator+
-    //   "src"+File.separator+"main"+File.separator+"deploy"+File.separator+"pathplanner"+File.separator+
-    //   "generatedJSON"+File.separator+"Basic Auto.wpilib.json", 
-    //   true));
+    chooser.addOption("Basic Auto", loadPathPlannerTrajectoryToRamseteCommand(
+      "C:"+File.separator+"Users"+File.separator+"AvengerMechatronics"+File.separator+"FRC2023"+File.separator+
+      "src"+File.separator+"main"+File.separator+"deploy"+File.separator+"pathplanner"+File.separator+
+      "generatedJSON"+File.separator+"Basic Auto.wpilib.json", 
+      true));
 
     Shuffleboard.getTab("SmartDashboard").add(chooser);
 
   }
 
-  // public Command loadPathPlannerTrajectoryToRamseteCommand(String filename, boolean resetOdometry){
-  //   Trajectory trajectory;
-  //   try{
-  //     Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
-  //     trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-  //   }catch(IOException exception){
-  //     DriverStation.reportError("Unable to open trajectory" + filename, exception.getStackTrace());
-  //     System.out.println("Unable to read from file" + filename);
-  //     return new InstantCommand();
-  //   }
+  public Command loadPathPlannerTrajectoryToRamseteCommand(String filename, boolean resetOdometry){
+    Trajectory trajectory;
+    try{
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    }catch(IOException exception){
+      DriverStation.reportError("Unable to open trajectory" + filename, exception.getStackTrace());
+      System.out.println("Unable to read from file" + filename);
+      return new InstantCommand();
+    }
 
-  //   RamseteCommand ramseteCommand = new RamseteCommand(trajectory, drivetrain::getPose, 
-  //       new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA), 
-  //       new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLT_SECONDS_PER_METER,
-  //           DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER), 
-  //       DriveConstants.K_DRIVE_KINEMATICS, drivetrain::getWheelSpeeds, 
-  //       new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
-  //       new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), drivetrain::tankDriveVolts, 
-  //       drivetrain);
+    RamseteCommand ramseteCommand = new RamseteCommand(trajectory, drivetrain::getPose, 
+        new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA), 
+        new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLT_SECONDS_PER_METER,
+            DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER), 
+        DriveConstants.K_DRIVE_KINEMATICS, drivetrain::getWheelSpeeds, 
+        new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
+        new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), drivetrain::tankDriveVolts, 
+        drivetrain);
 
-  //     if (resetOdometry) {
-  //       return new SequentialCommandGroup(
-  //         new InstantCommand(()->drivetrain.resetOdometry(trajectory.getInitialPose())), ramseteCommand);
-  //     } else{
-  //       return ramseteCommand;
-  //     }
+      if (resetOdometry) {
+        return new SequentialCommandGroup(
+          new InstantCommand(()->drivetrain.resetOdometry(trajectory.getInitialPose())), ramseteCommand);
+      } else{
+        return ramseteCommand;
+      }
+    }
 
     
 
@@ -137,25 +148,36 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureDriveTrain() {
-    // sets the command to drive the robot.
-    // will run whenever the drivetrain is not being used.
 
+/*
+Sets the state of the type of drivetrain. For example if driver wants Arcade than the driver presses the A button to enter arcade mode.
+If the driver presses the B button than the drivtrain will reset back to Tank Drive
+*/
+    if(controller.getAButtonPressed()){
+      driveState = true;
+    }
 
-    // drivetrain.setDefaultCommand(
-    //     new ArcadeDrive(
-    //         drivetrain,
-    //         controller::getLeftY,
-    //         controller::getRightX,
-    //         controller::getRightBumper,
-    //         controller:: getLeftBumper));
-    
+    if(controller.getBButtonPressed()){
+      driveState = false;
+    }
 
-  drivetrain.setDefaultCommand(
-    new TankDrive(
-        drivetrain,
-        controller::getLeftY,
-        controller::getRightY,
-        controller::getRightBumper));
+    if(driveState == true){
+      drivetrain.setDefaultCommand(
+        new ArcadeDrive(
+            drivetrain,
+            arm,
+            controller::getLeftY,
+            controller::getRightX,
+            controller::getRightBumper,
+            controller:: getLeftBumper));
+    }else{
+      drivetrain.setDefaultCommand(
+        new TankDrive(
+          drivetrain,
+          controller::getLeftY,
+          controller::getRightY,
+          controller::getRightBumper));
+    }
 }
 
 
@@ -164,62 +186,34 @@ public class RobotContainer {
 
     /* Button Mapping */
 
-    JoystickButton barUp = new JoystickButton(buttonPanel, ButtonConstants.barUp);
-    JoystickButton barDown = new JoystickButton(buttonPanel, ButtonConstants.barDown);
-    JoystickButton MidCubePreset = new JoystickButton(buttonPanel, ButtonConstants.MidConePreset);
-    JoystickButton HighCubePreset = new JoystickButton(buttonPanel, ButtonConstants.HighCubePreset);
-    JoystickButton grabObject = new JoystickButton(buttonPanel, ButtonConstants.grabbingPreset);
-    JoystickButton ResetPreset = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
-    JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.ARM_TOGGLE);
+    JoystickButton groundState = new JoystickButton(buttonPanel, ButtonConstants.Ground);
+    JoystickButton MidCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
+    JoystickButton MidCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
+    JoystickButton HighCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
+    JoystickButton HighCone = new JoystickButton(buttonPanel, ButtonConstants.HighCone);
+    JoystickButton ResetEncoder = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
     JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
+    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
+    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
+    JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
+    JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
 
-
-    //JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.CLAW_OUT);
-
-    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.clawIn);
-    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.clawOut);
-    /* Button Mapping */
 
     /* Command Mapping */
+    MidCone.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //2
+    MidCube.onTrue(new VFBAREncoder(bar, arm, 30786)); //4
 
-
-    barUp.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3)); //1
-    barDown.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //2
-
-
-    HighCubePreset.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
-    MidCubePreset.onTrue(new VFBAREncoder(bar, arm, 30786)); //4
-    grabObject.onTrue(new VFBAREncoder(bar, arm, 68027).withTimeout(1.5).andThen(new SolenoidRetractCommand(arm)));
-    ResetPreset.onTrue(new VFBAREncoder(bar, arm, 0)); //5
+    HighCube.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
+    HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
+    groundState.onTrue(new VFBAREncoder(bar, arm, 68027));
+    ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
 
     clawIn.whileTrue(new ClawIntake(claw, 1)); //9
     clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
-
-    armToggle.whileTrue(new ArmToggleCommand(arm)); //6
     clawToggle.whileTrue(new ClawToggle(claw));
 
-
-    // turnTurretRight.whileTrue(new TurretTestCommand(turret, 0.3));
-    // turnTurretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
-
-    // // barUp.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));
-    // barDown.onTrue(new VFBAREncoder(bar, arm, 0));
-
-    // clawIn.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3));
-    // clawOut.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));
-    // clawToggle.onTrue(new ClawToggle(claw));
-
-    // armToggle.whileTrue(new ArmToggleCommand(arm));
-
-    // armWitEncoder.onTrue(new VFBAREncoder(bar, arm, 40000));
-    //31714 is for cone high
-    //1813 is for cube high
-    //13393 for cube mid
-
-
-
-    
-    /* Command Mapping */
+    turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
+    turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
 
   }
 
@@ -231,7 +225,7 @@ public class RobotContainer {
     new SequentialCommandGroup(   
       new ClawOuttake(claw, 0.5).withTimeout(2),
       new WaitCommand(1),
-      new DriveBackAuto(drivetrain, 0.5).withTimeout(1).withTimeout(2));
+      new DriveBackAuto(drivetrain, 0.5));
       new AutoBalance();
 
    return null;
