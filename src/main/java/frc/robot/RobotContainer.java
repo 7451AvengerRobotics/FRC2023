@@ -98,11 +98,12 @@ public class RobotContainer {
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
     driveState = false;
 
-    setBasicChargeAutoMap();
-    setTwoCubeAuto();
     configureBindings();
     configureDriveTrain();
     getAutonomousCommand();
+
+    setBasicChargeAutoMap();
+    setTwoCubeAuto();
 
     chooser.addOption("Balance Auto Shishir", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
     chooser.setDefaultOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, 0.5,claw, 0.5));
@@ -112,17 +113,23 @@ public class RobotContainer {
 
   public void setBasicChargeAutoMap() {
     AutoConstants.basicChargeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(2));
-    AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(new GetOnRamp(drivetrain), new BalanceCommand(0.39, myLed)));
+    AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(
+    new GetOnRamp(drivetrain), 
+    new BalanceCommand(0.39, myLed)));
   }
 
   public void setTwoCubeAuto() {
     AutoConstants.twoCubeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(1));
-    AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(new TurretTestCommand(turret, 0.3), 
+    AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(
+    new TurretTestCommand(turret, 0.3), 
     new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(2)));
-    AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(new ClawIntake(claw, 0.5), 
+    AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(
+    new ClawIntake(claw, 0.5), 
     new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
     AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3));
-    AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(new ArmExtendCommand(arm), new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
+    AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(
+    new ArmExtendCommand(arm), 
+    new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
     new ClawOuttake(claw, 0.5).withTimeout(1)));
   }
 
