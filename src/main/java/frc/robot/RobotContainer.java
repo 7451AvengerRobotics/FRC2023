@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,31 +12,19 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.AutoCommands.BalanceCommand;
-import frc.robot.commands.AutoCommands.DriveBackAuto;
-import frc.robot.commands.AutoCommands.GetOnRamp;
+import frc.robot.commands.AutoCommands.ComplexAuto;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
@@ -49,7 +34,6 @@ import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.AutoBalance;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Turret;
@@ -120,8 +104,9 @@ public class RobotContainer {
     configureDriveTrain();
     getAutonomousCommand();
 
-    chooser.setDefaultOption("Balance Auto Inside", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
-    
+    chooser.addOption("Balance Auto Shishir", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
+    chooser.setDefaultOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, 0.5,claw, 0.5));
+
   }
 
   public void setBasicChargeAutoMap() {
@@ -221,14 +206,6 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
   }
 
   public Command getAutonomousCommand() {
-
-    new SequentialCommandGroup(   
-      new ClawOuttake(claw, 0.5).withTimeout(2),
-      new WaitCommand(1),
-
-      new DriveBackAuto(drivetrain, 0.5).withTimeout(1).withTimeout(2),
-      new GetOnRamp(drivetrain),
-      new BalanceCommand(-0.39));
 
    return null;
 
