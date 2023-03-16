@@ -37,7 +37,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.AutoCommands.BalanceCommand;
 import frc.robot.commands.AutoCommands.DriveBackAuto;
+import frc.robot.commands.AutoCommands.GetOnRamp;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
@@ -223,10 +225,12 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     new SequentialCommandGroup(   
       new ClawOuttake(claw, 0.5).withTimeout(2),
       new WaitCommand(1),
-      new DriveBackAuto(drivetrain, 0.5).withTimeout(1).withTimeout(2));
-      //new AutoBalance();
+
+      new DriveBackAuto(drivetrain, 0.5).withTimeout(1).withTimeout(2),
+      new GetOnRamp(drivetrain),
+      new BalanceCommand(-0.39));
 
    return null;
-    
+
 }
 }
