@@ -4,18 +4,40 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.RamseteAutoBuilder;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 //import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ButtonConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.AutoCommands.DriveBackAuto;
 import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
@@ -54,13 +76,34 @@ public class RobotContainer {
   private final XboxController controller;
   private final Joystick buttonPanel;
 
-  SendableChooser<Command> chooser = new SendableChooser<>();
+  
 
 /* Initializing Robot Subsystems */
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
+   * 
+   * 
    */
+  SendableChooser<Command> chooser = new SendableChooser<>();
+  public static HashMap<Command, String> autoMap = new HashMap<>();
+
+  public Command ramAutoBuilder(String pathName, HashMap<String, Command> eventMap) {
+
+    RamseteAutoBuilder pathBuilder = new RamseteAutoBuilder(drivetrain::getPose, drivetrain::resetOdometry, 
+      new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA), DriveConstants.K_DRIVE_KINEMATICS, 
+      new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLT_SECONDS_PER_METER, DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER), 
+      drivetrain::getWheelSpeeds, new PIDConstants(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
+      drivetrain::tankDriveVolts, eventMap, true, drivetrain);
+
+    List<PathPlannerTrajectory> pathToFollow = PathPlanner.loadPathGroup(pathName, PathPlanner.getConstraintsFromPath(pathName));
+    final Command auto = pathBuilder.fullAuto(pathToFollow);
+    autoMap.put(auto, pathName);
+    return auto;
+  }
+
+
+  
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
@@ -71,49 +114,18 @@ public class RobotContainer {
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
 
+    setBasicChargeAutoMap();
     configureBindings();
     configureDriveTrain();
     getAutonomousCommand();
 
-    // chooser.addOption("Basic Auto", loadPathPlannerTrajectoryToRamseteCommand(
-    //   "C:"+File.separator+"Users"+File.separator+"AvengerMechatronics"+File.separator+"FRC2023"+File.separator+
-    //   "src"+File.separator+"main"+File.separator+"deploy"+File.separator+"pathplanner"+File.separator+
-    //   "generatedJSON"+File.separator+"Basic Auto.wpilib.json", 
-    //   true));
-
-    Shuffleboard.getTab("SmartDashboard").add(chooser);
-
+    chooser.setDefaultOption("Balance Auto Inside", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
+    
   }
 
-  // public Command loadPathPlannerTrajectoryToRamseteCommand(String filename, boolean resetOdometry){
-  //   Trajectory trajectory;
-  //   try{
-  //     Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filename);
-  //     trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-  //   }catch(IOException exception){
-  //     DriverStation.reportError("Unable to open trajectory" + filename, exception.getStackTrace());
-  //     System.out.println("Unable to read from file" + filename);
-  //     return new InstantCommand();
-  //   }
-
-  //   RamseteCommand ramseteCommand = new RamseteCommand(trajectory, drivetrain::getPose, 
-  //       new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA), 
-  //       new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLT_SECONDS_PER_METER,
-  //           DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER), 
-  //       DriveConstants.K_DRIVE_KINEMATICS, drivetrain::getWheelSpeeds, 
-  //       new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
-  //       new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), drivetrain::tankDriveVolts, 
-  //       drivetrain);
-
-  //     if (resetOdometry) {
-  //       return new SequentialCommandGroup(
-  //         new InstantCommand(()->drivetrain.resetOdometry(trajectory.getInitialPose())), ramseteCommand);
-  //     } else{
-  //       return ramseteCommand;
-  //     }
-
-    
-
+  public void setBasicChargeAutoMap() {
+    AutoConstants.basicChargeAuto.put("spit", new ClawOuttake(claw, 0.5).withTimeout(2));
+  }
   
 
   
@@ -211,7 +223,7 @@ public class RobotContainer {
       new ClawOuttake(claw, 0.5).withTimeout(2),
       new WaitCommand(1),
       new DriveBackAuto(drivetrain, 0.5).withTimeout(1).withTimeout(2));
-      new AutoBalance();
+      //new AutoBalance();
 
    return null;
     
