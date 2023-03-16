@@ -52,11 +52,11 @@ public class Arm extends SubsystemBase{
 
 
    public void unlockSolenoid(){
-    lockSolenoid.set(true);
+    lockSolenoid.set(false);
    }
 
    public void lockSolenoid(){
-    lockSolenoid.set(false);
+    lockSolenoid.set(true);
    }
 
    public boolean getArmState(){

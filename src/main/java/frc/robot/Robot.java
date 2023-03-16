@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
-//import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -28,7 +27,6 @@ public class Robot extends TimedRobot {
   private Turret turret;
   private VirtualFourBar bar;
   boolean myAutonFinished = false;
- // private Arm arm;
   
   
   /**
