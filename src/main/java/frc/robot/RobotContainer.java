@@ -37,13 +37,15 @@ import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
 public class RobotContainer {
 
   /* Initializing Robot Subsystems */
-  public final  Drivetrain drivetrain;
+  private final  Drivetrain drivetrain;
+  private Led myLed;
   private final Arm arm;
   private final Claw claw;
   private final VirtualFourBar bar;
@@ -85,6 +87,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
+    myLed = new Led(9, 60);
     arm = new Arm();
     claw = new Claw();
     bar = new VirtualFourBar();
@@ -105,7 +108,7 @@ public class RobotContainer {
 
   public void setBasicChargeAutoMap() {
     AutoConstants.basicChargeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(2));
-    AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(new GetOnRamp(drivetrain), new BalanceCommand(0.39)));
+    AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(new GetOnRamp(drivetrain), new BalanceCommand(0.39, myLed)));
   }
 
   
