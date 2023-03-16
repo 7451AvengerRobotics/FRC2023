@@ -29,6 +29,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 //import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -51,6 +52,7 @@ public class RobotContainer {
   private final Turret turret;
   private final XboxController controller;
   private final Joystick buttonPanel;
+  private Led led;
 
   SendableChooser<Command> chooser = new SendableChooser<>();
 
