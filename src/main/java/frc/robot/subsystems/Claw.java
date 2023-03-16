@@ -16,7 +16,7 @@ import frc.robot.Constants.PortConstants;
 public class Claw extends SubsystemBase{
  
 
-   
+//Creating Claw and properties of it 
     private final DoubleSolenoid clawSolenoid;
     private final CANSparkMax clawMotorL;
     private final CANSparkMax clawMotorR;
@@ -26,7 +26,7 @@ public class Claw extends SubsystemBase{
     public Claw(){
         super();
 
-        
+ //Creating Claw and properties of it        
         clawSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PortConstants.CLAW_PNEUMATIC[0], PortConstants.CLAW_PNEUMATIC[1]);
         clawMotorL = new CANSparkMax(PortConstants.Claw[0], MotorType.kBrushless);
         clawMotorR = new CANSparkMax(PortConstants.Claw[1], MotorType.kBrushless);
@@ -35,17 +35,18 @@ public class Claw extends SubsystemBase{
 
 
    
-
+//Extending the Claw
     public void extend(){
         clawSolenoid.set(Value.kForward);
         isExtended = true;
     }
 
+//Retracting the Claw
     public void retract(){
         clawSolenoid.set(Value.kReverse);
         isExtended = false;
     }
-
+//Toggling the Claw
     public void toggle(){
         if(isExtended){
             this.retract();
@@ -53,7 +54,7 @@ public class Claw extends SubsystemBase{
             this.extend();
         }
     }
-
+//Setting power to the claw
     public void setPower(double power){
         clawMotorL.set(power);
         clawMotorR.set(-power);

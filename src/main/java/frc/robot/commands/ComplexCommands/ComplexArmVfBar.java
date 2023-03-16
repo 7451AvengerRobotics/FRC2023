@@ -10,14 +10,14 @@ import frc.robot.subsystems.VirtualFourBar;
 
 public class ComplexArmVfBar extends ParallelCommandGroup {
   public ComplexArmVfBar(Arm arm, VirtualFourBar bar, int encoderPos) {
-    if(arm.getArmState() == false){
-      new ArmExtendCommand(arm);
+    if(arm.getArmState() == true){
+      addCommands(new VFBAREncoder(bar, arm, encoderPos)); // Sets the virtual 4 bar to a desired location.
+    }else{
+      addCommands(   
+        //extends the Arm 
+        new ArmExtendCommand(arm),
+        // Sets the virtual 4 bar to a desired location.
+        new VFBAREncoder(bar, arm, encoderPos));
     }
-    addCommands(   
-                //extends the Arm 
-              
-                // Sets the virtual 4 bar to a desired location.
-                new VFBAREncoder(bar, arm, encoderPos)
-   );
   }
 }

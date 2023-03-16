@@ -13,9 +13,9 @@ public class VirtualFourBarComplex extends SequentialCommandGroup {
     double power;
     public VirtualFourBarComplex(VirtualFourBar miniArm, Arm arm, double power){
         addCommands(
-            new SolenoidExtendCommand(arm),
+            new SolenoidRetractCommand(arm), 
             new VirtualFourBarCommand(miniArm, arm, power),
-            new SolenoidRetractCommand(arm)  
+            new SolenoidExtendCommand(arm)
         );
 
     }

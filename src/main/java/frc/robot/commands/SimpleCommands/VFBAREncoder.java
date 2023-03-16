@@ -17,7 +17,7 @@ public class VFBAREncoder extends CommandBase{
 
     @Override
     public void initialize(){
-        arm.lockSolenoid();
+        arm.unlockSolenoid();
     }
 
     @Override 
@@ -31,7 +31,8 @@ public class VFBAREncoder extends CommandBase{
     }
 
     @Override
-    public boolean isFinished(){        return false;
+    public boolean isFinished(){        
+        return false;
     }
 }
 

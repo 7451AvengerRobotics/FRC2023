@@ -25,8 +25,8 @@ public class ButtonConstants {
   public static final int TurretLeft = 5;
   public static final int TurretRight = 6;
 
-  public static final int MidCube = 5;
-  public static final int MidCone = 6;
+  public static final int MidCone = 5;
+  public static final int MidCube = 6;
   
 
   public static final int Ground = 9;
