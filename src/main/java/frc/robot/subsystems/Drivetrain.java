@@ -217,6 +217,13 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].set(ControlMode.PercentOutput, power);
   }
 
+  public void setBreakMode() {
+    leftMotors[0].setNeutralMode(NeutralMode.Brake);
+    rightMotors[0].setNeutralMode(NeutralMode.Brake);
+    leftMotors[1].setNeutralMode(NeutralMode.Brake);
+    rightMotors[1].setNeutralMode(NeutralMode.Brake);
+  }
+
   /**
    * Method will get the Gyro's Yaw Rate.
    * 
