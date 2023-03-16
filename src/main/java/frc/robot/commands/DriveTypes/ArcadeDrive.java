@@ -13,8 +13,6 @@ public class ArcadeDrive extends CommandBase {
   private final DoubleSupplier power;
   private final DoubleSupplier turn;
   private final BooleanSupplier turbo;
-  private final BooleanSupplier slow;
-
   /**
    * Creates a new DefaultDrive.
    *
@@ -23,12 +21,11 @@ public class ArcadeDrive extends CommandBase {
    * @param power       The control input for driving 
    * @param rotation    The control input for turning
    * @param turbo       The button input for toggling the robot speed
-   * @param slow        The button input for a slow mode
    */
 
    
   public ArcadeDrive( Drivetrain drive, Arm arm, DoubleSupplier power, 
-                    DoubleSupplier turn, BooleanSupplier turbo, BooleanSupplier slow) {
+                    DoubleSupplier turn, BooleanSupplier turbo) {
         super();
 
     this.drive = drive;
@@ -36,14 +33,13 @@ public class ArcadeDrive extends CommandBase {
     this.power = power;
     this.turn = turn;
     this.turbo = turbo;
-    this.slow = slow;
     addRequirements(drive, arm);
   }
 
   @Override
   public void execute() {
     if (arm.getArmState() == true){
-      double scalar = slow.getAsBoolean() ? 0.3: 0.3;
+      double scalar = arm.getArmState() ? 0.3: 0.3;
       drive.arcadeDrive(power.getAsDouble() * scalar, turn.getAsDouble() * -scalar);
     }
     else if(turbo.getAsBoolean() == true){

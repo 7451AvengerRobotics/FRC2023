@@ -153,12 +153,12 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
             arm,
             controller::getLeftY,
             controller::getRightX,
-            controller::getRightBumper,
             controller:: getLeftBumper));
     }else{
       drivetrain.setDefaultCommand(
         new TankDrive(
           drivetrain,
+          arm,
           controller::getLeftY,
           controller::getRightY,
           controller::getRightBumper));
