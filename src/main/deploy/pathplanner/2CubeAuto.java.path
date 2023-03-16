@@ -1,0 +1,100 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.9466381993262223,
+        "y": 1.0745396579761142
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.9466381993262223,
+        "y": 1.0745396579761142
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "Start"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.282833633282927,
+        "y": 0.9414108507932325
+      },
+      "prevControl": {
+        "x": 4.951545561454115,
+        "y": 0.9223924497671074
+      },
+      "nextControl": {
+        "x": 4.951545561454115,
+        "y": 0.9223924497671074
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": true,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.203386613178922,
+        "y": 1.055521256949987
+      },
+      "prevControl": {
+        "x": 2.9736318547370217,
+        "y": 1.055521256949987
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "Stop"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": null,
+  "maxAcceleration": null,
+  "isReversed": true,
+  "markers": [
+    {
+      "position": 0.30303030303017936,
+      "names": [
+        "IntakeArm"
+      ]
+    },
+    {
+      "position": 0.896969696969687,
+      "names": [
+        "Intake"
+      ]
+    },
+    {
+      "position": 1.3939393939394251,
+      "names": [
+        "TurretFlip"
+      ]
+    }
+  ]
+}

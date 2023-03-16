@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -33,6 +34,7 @@ import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VFBAREncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
@@ -103,12 +105,14 @@ public class RobotContainer {
     driveState = false;
 
     setBasicChargeAutoMap();
+    setTwoCubeAuto();
     configureBindings();
     configureDriveTrain();
     getAutonomousCommand();
 
     chooser.addOption("Balance Auto Shishir", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
     chooser.setDefaultOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, 0.5,claw, 0.5));
+    chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
 
   }
 
@@ -117,7 +121,17 @@ public class RobotContainer {
     AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(new GetOnRamp(drivetrain), new BalanceCommand(0.39)));
   }
 
-  
+  public void setTwoCubeAuto() {
+    AutoConstants.twoCubeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(1));
+    AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(new TurretTestCommand(turret, 0.3), 
+    new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(2)));
+    AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(new ClawIntake(claw, 0.5), 
+    new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
+    AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3));
+    AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(new ArmExtendCommand(arm), new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
+    new ClawOuttake(claw, 0.5).withTimeout(1)));
+  }
+
 
   
 
@@ -186,6 +200,7 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
     JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
     JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
+    
 
 
     /* Command Mapping */

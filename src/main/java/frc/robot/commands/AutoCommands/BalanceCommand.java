@@ -12,14 +12,13 @@ public class BalanceCommand extends CommandBase {
     PIDController pid = new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0);
     double speed;
     double angle;
-    double speeddBalance;
     Drivetrain drive;
     double speedBalance;
     public static boolean stop;
 
     public BalanceCommand(double speedBalance) {
         addRequirements(drive);
-        this.speedBalance = speeddBalance;
+        this.speedBalance = speedBalance;
     }
 
     @Override
