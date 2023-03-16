@@ -37,7 +37,7 @@ public class ArcadeDrive extends CommandBase {
     this.turn = turn;
     this.turbo = turbo;
     this.slow = slow;
-    addRequirements(drive);
+    addRequirements(drive, arm);
   }
 
   @Override
