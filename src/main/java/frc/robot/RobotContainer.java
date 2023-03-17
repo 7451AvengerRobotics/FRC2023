@@ -36,6 +36,7 @@ import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
+import frc.robot.commands.Utils.Time;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -119,7 +120,8 @@ public class RobotContainer {
   }
 
   public void setTwoCubeAuto() {
-    AutoConstants.twoCubeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(1));
+    AutoConstants.twoCubeAuto.put("Start", new SequentialCommandGroup(
+    new ClawOuttake(claw, 0.5).withTimeout(1), new Time(500)));
     AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(
     new TurretTestCommand(turret, 0.3), 
     new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(1.3)));
