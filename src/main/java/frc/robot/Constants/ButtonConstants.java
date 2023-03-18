@@ -17,23 +17,26 @@ public class ButtonConstants {
   // All Constants are subject to change once we figure out what each one does in the old code.
   //12 is not connected so it is 1-11 
   /* Actual Buttons */
-  public static final int HighCone = 1;
+
   public static final int HighCube = 2;
+  public static final int MidCone = 5;
+  public static final int MidCube = 6;
 
   public static final int ClawIntake = 3;
   public static final int ClawOuttake = 4;
 
-  public static final int TurretLeft = 5;
-  public static final int TurretRight = 6;
+  public static final int TurretLeft = 9;
+  public static final int TurretRight = 10;
 
-  public static final int MidCone = 5;
-  public static final int MidCube = 6;
+
   
 
-  public static final int Ground = 9;
-  public static final int CLAW_TOGGLE = 10;
+  public static final int Ground = 1;
+  public static final int CLAW_TOGGLE = 8;
 
   public static final int ResetEncoder = 11;
+
+  public static final int lockSolenoid = 7;
   /* Actual Buttons */
 
   /* Test Buttons */

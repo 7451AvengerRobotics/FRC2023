@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.SimpleCommands.SolenoidCommand;
+import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
@@ -171,22 +173,53 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
 
     /* Actual Buttons */
 
-    JoystickButton highCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
     JoystickButton midCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
     JoystickButton midCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
+
+    JoystickButton highCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
     JoystickButton grabObject = new JoystickButton(buttonPanel, ButtonConstants.Ground);
     JoystickButton resetBar = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
 
-    JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
     JoystickButton clawIntake = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
     JoystickButton clawOuttake = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
+    JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
 
-    JoystickButton turretL = new JoystickButton(buttonPanel, ButtonConstants.turretL);
-    JoystickButton turretR = new JoystickButton(buttonPanel, ButtonConstants.turretR);
+    JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
+    JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
 
     JoystickButton lockSolenoid = new JoystickButton(buttonPanel, ButtonConstants.lockSolenoid);
 
     /* Actual Buttons */
+
+
+
+
+    /*Actual Command Mapping */
+   midCone.onTrue(new EncoderandArm(bar, arm, 62464)); // 5
+   midCube.onTrue(new StandardEncoder(bar, arm, 9732)); // 6
+
+
+    highCube.onTrue(new EncoderandArm(bar, arm, 30786)); // 2
+    grabObject.onTrue(new StandardEncoder(bar, arm, 69977)); // 1
+    resetBar.onTrue(new ResetVFbarEncoder(bar, arm, 0)); // 11
+
+
+    clawIntake.whileTrue(new ClawIntake(claw, 1)); // 3
+    clawOuttake.whileTrue(new ClawOuttake(claw, -1)); // 4
+    clawToggle.whileTrue(new ClawToggle(claw)); // 8
+
+    lockSolenoid.onTrue(new SolenoidCommand(arm)); // 7
+
+
+    turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
+    turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
+    /*Actual Command Mapping */
+
+
+
+
+
+
 
 
     /*    TestButton Mapping */
@@ -200,30 +233,9 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     // JoystickButton turretL = new JoystickButton(buttonPanel, ButtonConstants.turretL);
     // JoystickButton turretR = new JoystickButton(buttonPanel, 11);
     // JoystickButton midCone = new JoystickButton(buttonPanel, 9);
-    /* Command Mapping */
-
-    /*Actual Command Mapping */
-   midCone.whileTrue(new EncoderandArm(bar, arm, 62464)); //2
-   midCube.onTrue(new StandardEncoder(bar, arm, 9732)); //4
+    /* TestButton Mapping */
 
 
-    highCube.onTrue(new EncoderandArm(bar, arm, 30786)); //3
-    grabObject.onTrue(new StandardEncoder(bar, arm, 69977));
-    resetBar.onTrue(new ResetVFbarEncoder(bar, arm, 0)); //5
-
-
-    clawIntake.whileTrue(new ClawIntake(claw, 1)); //9
-    clawOuttake.whileTrue(new ClawOuttake(claw, -1)); //10
-    clawToggle.whileTrue(new ClawToggle(claw));
-
-    lockSolenoid.onTrue(new SolenoidCommand(arm));
-
-
-   // turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
-    //turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
-    /*Actual Command Mapping */
-
-//62464
     /* Test Mapping */
     // clawToggle.onTrue(new ClawToggle(claw));
     // armToggle.onTrue(new ArmToggleCommand(arm));
@@ -237,7 +249,7 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     // midCone.whileTrue(new MidConeCommand(bar, arm, 62464));
     //turretR.whileTrue(new TurretTestCommand(turret, 0.-2));
     /* Test Mapping */
-//Mid cube is 9732 Grab Object is 72177
+
     /* Command Mapping */
 
   }
