@@ -43,6 +43,8 @@ public class ButtonConstants {
   public static final int vfbarUp = 4;
   public static final int clawIn = 5;
   public static final int clawOut = 6;
+  public static final int turretL = 8;
+  public static final int turretR = 9;
   /* Test Buttons */
 
 

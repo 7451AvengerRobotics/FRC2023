@@ -4,32 +4,16 @@
 
 package frc.robot;
 
-import java.util.HashMap;
-import java.util.List;
-
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.RamseteAutoBuilder;
-
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ButtonConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.AutoCommands.BalanceCommand;
-import frc.robot.commands.AutoCommands.ComplexAuto;
-import frc.robot.commands.AutoCommands.GetOnRamp;
+import frc.robot.commands.ComplexCommands.ComplexArmVfBar;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
+import frc.robot.commands.SimpleCommands.JustEncoder;
+import frc.robot.commands.SimpleCommands.MidConeCommand;
+import frc.robot.commands.SimpleCommands.SolenoidCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VFBAREncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
@@ -69,23 +53,23 @@ public class RobotContainer {
 
 
 
-  public static SendableChooser<Command> chooser = new SendableChooser<>();
-  public static HashMap<Command, String> autoMap = new HashMap<>();
+  // public static SendableChooser<Command> chooser = new SendableChooser<>();
+  // public static HashMap<Command, String> autoMap = new HashMap<>();
 
-  public Command ramAutoBuilder(String pathName, HashMap<String, Command> eventMap) {
+  // public Command ramAutoBuilder(String pathName, HashMap<String, Command> eventMap) {
 
-    RamseteAutoBuilder pathBuilder = new RamseteAutoBuilder(drivetrain::getPose, drivetrain::resetOdometry, 
-      new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA), DriveConstants.K_DRIVE_KINEMATICS, 
-      new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLT_SECONDS_PER_METER, DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER), 
-      drivetrain::getWheelSpeeds, new PIDConstants(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
-      drivetrain::tankDriveVolts, eventMap, true, drivetrain);
+  //   RamseteAutoBuilder pathBuilder = new RamseteAutoBuilder(drivetrain::getPose, drivetrain::resetOdometry, 
+  //     new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA), DriveConstants.K_DRIVE_KINEMATICS, 
+  //     new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLT_SECONDS_PER_METER, DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER), 
+  //     drivetrain::getWheelSpeeds, new PIDConstants(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
+  //     drivetrain::tankDriveVolts, eventMap, true, drivetrain);
 
-    List<PathPlannerTrajectory> pathToFollow = PathPlanner.loadPathGroup(pathName,
-          PathPlanner.getConstraintsFromPath(pathName));
-    final Command auto = pathBuilder.fullAuto(pathToFollow);
-    autoMap.put(auto, pathName);
-    return auto;
-  }
+  //   List<PathPlannerTrajectory> pathToFollow = PathPlanner.loadPathGroup(pathName,
+  //         PathPlanner.getConstraintsFromPath(pathName));
+  //   final Command auto = pathBuilder.fullAuto(pathToFollow);
+  //   autoMap.put(auto, pathName);
+  //   return auto;
+  // }
 
     /**
  * This class is where the bulk of the robot should be declared. Since
@@ -112,40 +96,40 @@ public class RobotContainer {
     configureDriveTrain();
     getAutonomousCommand();
 
-    setBasicChargeAutoMap();
-    setTwoCubeAuto();
+    // setBasicChargeAutoMap();
+    // setTwoCubeAuto();
 
-    Shuffleboard.getTab("AUTON").add(chooser).withSize(3, 1);
-    Command instantCmd = new InstantCommand();
-    chooser.setDefaultOption("Nothing", instantCmd);
-    autoMap.put(instantCmd, "nothing");
-    chooser.addOption("Balance Auto Shishir", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
-    chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, 0.5,claw, 0.5));
-    chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
+    // Shuffleboard.getTab("AUTON").add(chooser).withSize(3, 1);
+    // Command instantCmd = new InstantCommand();
+    // chooser.setDefaultOption("Nothing", instantCmd);
+    // autoMap.put(instantCmd, "nothing");
+    // chooser.addOption("Balance Auto Shishir", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
+    // chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, 0.5,claw, 0.5));
+    // chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
 
   }
 
-  public void setBasicChargeAutoMap() {
-    AutoConstants.basicChargeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(2));
-    AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(
-    new GetOnRamp(drivetrain), 
-    new BalanceCommand(0.39)));
-  }
+  // public void setBasicChargeAutoMap() {
+  //   AutoConstants.basicChargeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(2));
+  //   AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(
+  //   new GetOnRamp(drivetrain), 
+  //   new BalanceCommand(0.39)));
+  // }
 
-  public void setTwoCubeAuto() {
-    AutoConstants.twoCubeAuto.put("Start", new SequentialCommandGroup(
-    new ClawOuttake(claw, 0.5).withTimeout(1)));
-    AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(
-    new TurretTestCommand(turret, 0.3).withTimeout(1), 
-    new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(1.3)));
-    AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(
-    new ClawIntake(claw, 0.5), 
-    new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
-    AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3).withTimeout(1));
-    AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(
-    new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
-    new ClawOuttake(claw, 0.5).withTimeout(1)));
-  }
+  // public void setTwoCubeAuto() {
+  //   AutoConstants.twoCubeAuto.put("Start", new SequentialCommandGroup(
+  //   new ClawOuttake(claw, 0.5).withTimeout(1)));
+  //   AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(
+  //   new TurretTestCommand(turret, 0.3).withTimeout(1), 
+  //   new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(1.3)));
+  //   AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(
+  //   new ClawIntake(claw, 0.5), 
+  //   new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
+  //   AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3).withTimeout(1));
+  //   AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(
+  //   new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
+  //   new ClawOuttake(claw, 0.5).withTimeout(1)));
+  // }
 
 
   
@@ -189,64 +173,68 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
 
 
     /* Actual Buttons */
-    // JoystickButton groundState = new JoystickButton(buttonPanel, ButtonConstants.Ground);
-    // JoystickButton MidCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
-    // JoystickButton MidCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
-    // JoystickButton HighCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
-    // JoystickButton HighCone = new JoystickButton(buttonPanel, ButtonConstants.HighCone);
-    // JoystickButton ResetEncoder = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
-    // JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
-    // JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
-    // JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
-    // JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
-    // JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
+    JoystickButton groundState = new JoystickButton(buttonPanel, ButtonConstants.Ground);
+   JoystickButton MidCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
+    JoystickButton MidCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
+    JoystickButton HighCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
+    JoystickButton HighCone = new JoystickButton(buttonPanel, ButtonConstants.HighCone);
+   JoystickButton ResetEncoder = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
+    JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
+    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
+    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
+    //JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
+    //JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
     /* Actual Buttons */
 
 
     /*    TestButton Mapping */
-    JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.clawToggle);
-    JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.armToggle);
-    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.clawOut);
-    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.clawIn);
-    JoystickButton vfBarD = new JoystickButton(buttonPanel, ButtonConstants.vfbarDown);
-    JoystickButton vfBarUp = new JoystickButton(buttonPanel, ButtonConstants.vfbarUp);
-   
-
-
-
-
+    // JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.clawToggle);
+    // JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.armToggle);
+    // JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.clawOut);
+    // JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.clawIn);
+    // JoystickButton vfBarD = new JoystickButton(buttonPanel, ButtonConstants.vfbarDown);
+    // JoystickButton vfBarUp = new JoystickButton(buttonPanel, ButtonConstants.vfbarUp);
+    // JoystickButton lockSolenoid = new JoystickButton(buttonPanel, 7);
+    // JoystickButton turretL = new JoystickButton(buttonPanel, ButtonConstants.turretL);
+    // JoystickButton turretR = new JoystickButton(buttonPanel, 11);
+    // JoystickButton midCone = new JoystickButton(buttonPanel, 9);
     /* Command Mapping */
 
     /*Actual Command Mapping */
-    // MidCone.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //2
-    // MidCube.onTrue(new VFBAREncoder(bar, arm, 30786)); //4
+   MidCone.whileTrue(new MidConeCommand(bar, arm, 62464)); //2
+   MidCube.onTrue(new JustEncoder(bar, arm, 9732)); //4
 
 
-    // HighCube.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
-    // HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
-    // groundState.onTrue(new VFBAREncoder(bar, arm, 68027));
-    // ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
+    HighCube.onTrue(new MidConeCommand(bar, arm, 30786)); //3
+   // HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
+    groundState.onTrue(new JustEncoder(bar, arm, 69977));
+    ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
 
 
-    // clawIn.whileTrue(new ClawIntake(claw, 1)); //9
-    // clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
-    // clawToggle.whileTrue(new ClawToggle(claw));
+    clawIn.whileTrue(new ClawIntake(claw, 1)); //9
+    clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
+    clawToggle.whileTrue(new ClawToggle(claw));
 
 
-    // turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
-    // turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
+   // turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
+    //turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
     /*Actual Command Mapping */
 
-
+//62464
     /* Test Mapping */
-    clawToggle.onTrue(new ClawToggle(claw));
-    armToggle.onTrue(new ArmToggleCommand(arm));
-    clawOut.whileTrue(new ClawOuttake(claw, -1));
-    clawIn.whileTrue(new ClawIntake(claw, 1));
-    vfBarD.whileTrue(new VirtualFourBarCommand(bar, arm, 0.5));
-    vfBarUp.whileTrue(new VirtualFourBarCommand(bar, arm, -0.5));
+    // clawToggle.onTrue(new ClawToggle(claw));
+    // armToggle.onTrue(new ArmToggleCommand(arm));
+    // clawOut.whileTrue(new ClawOuttake(claw, -1));
+    // clawIn.whileTrue(new ClawIntake(claw, 1));
+    // vfBarD.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3));
+    // vfBarUp.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));
+    // lockSolenoid.onTrue(new SolenoidCommand(arm));
+    // turretL.whileTrue(new MidConeCommand(bar, arm, 30786));
+    // turretR.whileTrue(new VFBAREncoder(bar, arm, 0));
+    // midCone.whileTrue(new MidConeCommand(bar, arm, 62464));
+    //turretR.whileTrue(new TurretTestCommand(turret, 0.-2));
     /* Test Mapping */
-
+//Mid cube is 9732 Grab Object is 72177
     /* Command Mapping */
 
   }
@@ -255,8 +243,6 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
   }
 
   public Command getAutonomousCommand() {
-
-    return chooser.getSelected();
-
+ return null;
 }
 }

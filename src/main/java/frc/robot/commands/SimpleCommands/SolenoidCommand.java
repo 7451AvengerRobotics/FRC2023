@@ -17,7 +17,7 @@ public class SolenoidCommand extends CommandBase{
 
     @Override 
     public void execute(){
-        arm.lockSolenoid();
+        arm.unlockSolenoid();
     }
     
     @Override

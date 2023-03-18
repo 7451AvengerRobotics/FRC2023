@@ -25,17 +25,11 @@ public class Turret extends SubsystemBase {
         turret.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         
 
-//Configures the PID Slot to 0 as well as sets the soft limits to ensure the turrret does not move 180
-        turret.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, TurretConstants.kTimeoutMs);
         turret.configForwardSoftLimitThreshold(680000);
         turret.configReverseSoftLimitThreshold(-642073);
         turret.configForwardSoftLimitEnable(true);
         turret.configReverseSoftLimitEnable(true);
 
-//Setting the PID Values
-        turret.config_kP(0, TurretConstants.kGains.kP, TurretConstants.kTimeoutMs);
-		turret.config_kI(0, TurretConstants.kGains.kI, TurretConstants.kTimeoutMs);
-		turret.config_kD(0, TurretConstants.kGains.kD, TurretConstants.kTimeoutMs);
 
     }
 
@@ -57,10 +51,5 @@ public class Turret extends SubsystemBase {
 //Setting the Encoder position of the turret to 0
     public void zeroSensors() {
         turret.getSensorCollection().setIntegratedSensorPosition(0, TurretConstants.kTimeoutMs);
-    }
-//Will Change the turret position in conjunction with Limelight
-    public void turretAdjust(double counts){
-        turret.set(TalonFXControlMode.Position, 100, DemandType.AuxPID, counts);
-        turret.set(TalonFXControlMode.Position, counts);
     }
 }

@@ -17,17 +17,18 @@ public class VFBAREncoder extends CommandBase{
 
     @Override
     public void initialize(){
-        arm.unlockSolenoid();
+        arm.lockSolenoid();
     }
 
     @Override 
     public void execute(){
-        
+        arm.retract();
         bar.setPosition(power);
     }
     
     @Override
     public void end(boolean interrupted){
+        arm.lockSolenoid();
     }
 
     @Override

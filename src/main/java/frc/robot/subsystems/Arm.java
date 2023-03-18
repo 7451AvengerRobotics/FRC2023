@@ -32,21 +32,21 @@ public class Arm extends SubsystemBase{
 
    public void extend(){
     //sets the solenoid output to on
-    armSolenoid.set(Value.kReverse);
+    armSolenoid.set(Value.kForward);
     isExtended = true;
    }
 
    public void retract(){
     //sets the solenoid output to off
-    armSolenoid.set(Value.kForward);
+    armSolenoid.set(Value.kReverse);
     isExtended = false;
    }
 
    public void toggle(){
     if(isExtended){
-        this.retract();
-    } else{
         this.extend();
+    } else{
+        this.retract();
     }
    }
 
