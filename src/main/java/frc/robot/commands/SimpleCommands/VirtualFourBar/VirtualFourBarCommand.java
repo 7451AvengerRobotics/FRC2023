@@ -1,14 +1,14 @@
-package frc.robot.commands.SimpleCommands;
+package frc.robot.commands.SimpleCommands.VirtualFourBar;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.VirtualFourBar;
 
-public class VFBAREncoder extends CommandBase{
+public class VirtualFourBarCommand extends CommandBase{
     private final VirtualFourBar bar;
     private final Arm arm;
     private final double power;
-    public VFBAREncoder(VirtualFourBar bar, Arm arm, double power){
+    public VirtualFourBarCommand(VirtualFourBar bar, Arm arm, double power){
         this.bar = bar;
         this.power = power;
         this.arm = arm;
@@ -17,22 +17,25 @@ public class VFBAREncoder extends CommandBase{
 
     @Override
     public void initialize(){
-        arm.lockSolenoid();
+        arm.unlockSolenoid();
+
     }
 
     @Override 
     public void execute(){
-        arm.retract();
-        bar.setPosition(power);
+        bar.setPower(power);
     }
     
     @Override
     public void end(boolean interrupted){
-        arm.lockSolenoid();
+        bar.setPower(0);
+        arm.unlockSolenoid();
+
     }
 
     @Override
-    public boolean isFinished(){        
+    public boolean isFinished(){
+        arm.lockSolenoid();
         return false;
     }
 }

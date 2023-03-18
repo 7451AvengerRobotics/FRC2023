@@ -1,14 +1,14 @@
-package frc.robot.commands.SimpleCommands;
+package frc.robot.commands.SimpleCommands.VirtualFourBar;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.VirtualFourBar;
 
-public class MidConeCommand extends CommandBase{
+public class ResetVFbarEncoder extends CommandBase{
     private final VirtualFourBar bar;
     private final Arm arm;
     private final double power;
-    public MidConeCommand(VirtualFourBar bar, Arm arm, double power){
+    public ResetVFbarEncoder(VirtualFourBar bar, Arm arm, double power){
         this.bar = bar;
         this.power = power;
         this.arm = arm;
@@ -22,7 +22,7 @@ public class MidConeCommand extends CommandBase{
 
     @Override 
     public void execute(){
-        arm.extend();
+        arm.retract();
         bar.setPosition(power);
     }
     

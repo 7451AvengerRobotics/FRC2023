@@ -1,14 +1,14 @@
-package frc.robot.commands.SimpleCommands;
+package frc.robot.commands.SimpleCommands.VirtualFourBar;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.VirtualFourBar;
 
-public class JustEncoder extends CommandBase{
+public class StandardEncoder extends CommandBase{
     private final VirtualFourBar bar;
     private final Arm arm;
     private final double power;
-    public JustEncoder(VirtualFourBar bar, Arm arm, double power){
+    public StandardEncoder(VirtualFourBar bar, Arm arm, double power){
         this.bar = bar;
         this.power = power;
         this.arm = arm;

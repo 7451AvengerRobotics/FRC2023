@@ -6,21 +6,18 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ButtonConstants;
-import frc.robot.commands.ComplexCommands.ComplexArmVfBar;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
-import frc.robot.commands.SimpleCommands.JustEncoder;
-import frc.robot.commands.SimpleCommands.MidConeCommand;
 import frc.robot.commands.SimpleCommands.SolenoidCommand;
-import frc.robot.commands.SimpleCommands.TurretTestCommand;
-import frc.robot.commands.SimpleCommands.VFBAREncoder;
-import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
+import frc.robot.commands.SimpleCommands.VirtualFourBar.EncoderandArm;
+import frc.robot.commands.SimpleCommands.VirtualFourBar.ResetVFbarEncoder;
+import frc.robot.commands.SimpleCommands.VirtualFourBar.StandardEncoder;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -173,17 +170,22 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
 
 
     /* Actual Buttons */
-    JoystickButton groundState = new JoystickButton(buttonPanel, ButtonConstants.Ground);
-   JoystickButton MidCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
-    JoystickButton MidCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
-    JoystickButton HighCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
-    JoystickButton HighCone = new JoystickButton(buttonPanel, ButtonConstants.HighCone);
-   JoystickButton ResetEncoder = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
+
+    JoystickButton highCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
+    JoystickButton midCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
+    JoystickButton midCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
+    JoystickButton grabObject = new JoystickButton(buttonPanel, ButtonConstants.Ground);
+    JoystickButton resetBar = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
+
     JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
-    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
-    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
-    //JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
-    //JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
+    JoystickButton clawIntake = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
+    JoystickButton clawOuttake = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
+
+    JoystickButton turretL = new JoystickButton(buttonPanel, ButtonConstants.turretL);
+    JoystickButton turretR = new JoystickButton(buttonPanel, ButtonConstants.turretR);
+
+    JoystickButton lockSolenoid = new JoystickButton(buttonPanel, ButtonConstants.lockSolenoid);
+
     /* Actual Buttons */
 
 
@@ -201,19 +203,20 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     /* Command Mapping */
 
     /*Actual Command Mapping */
-   MidCone.whileTrue(new MidConeCommand(bar, arm, 62464)); //2
-   MidCube.onTrue(new JustEncoder(bar, arm, 9732)); //4
+   midCone.whileTrue(new EncoderandArm(bar, arm, 62464)); //2
+   midCube.onTrue(new StandardEncoder(bar, arm, 9732)); //4
 
 
-    HighCube.onTrue(new MidConeCommand(bar, arm, 30786)); //3
-   // HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
-    groundState.onTrue(new JustEncoder(bar, arm, 69977));
-    ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
+    highCube.onTrue(new EncoderandArm(bar, arm, 30786)); //3
+    grabObject.onTrue(new StandardEncoder(bar, arm, 69977));
+    resetBar.onTrue(new ResetVFbarEncoder(bar, arm, 0)); //5
 
 
-    clawIn.whileTrue(new ClawIntake(claw, 1)); //9
-    clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
+    clawIntake.whileTrue(new ClawIntake(claw, 1)); //9
+    clawOuttake.whileTrue(new ClawOuttake(claw, -1)); //10
     clawToggle.whileTrue(new ClawToggle(claw));
+
+    lockSolenoid.onTrue(new SolenoidCommand(arm));
 
 
    // turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
