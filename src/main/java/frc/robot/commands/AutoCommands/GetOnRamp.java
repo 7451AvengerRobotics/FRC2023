@@ -26,7 +26,7 @@ public class GetOnRamp extends CommandBase{
             drive.tankDrive(-0.525, -0.525);
         }
 
-        if (pitch < 35 && pitch > 33) {
+        if (pitch < 18 && pitch > 16) {
             end = true;
         }
     }
