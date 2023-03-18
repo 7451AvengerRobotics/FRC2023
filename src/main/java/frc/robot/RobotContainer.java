@@ -185,14 +185,14 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
 
   private void configureBindings() {
 
-    /* Button Mapping */
+       /* Button Mapping */
 
-    JoystickButton groundState = new JoystickButton(buttonPanel, ButtonConstants.Ground);
-    JoystickButton MidCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
-    JoystickButton MidCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
-    JoystickButton HighCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
-    JoystickButton toggleArm = new JoystickButton(buttonPanel, 4);
-    JoystickButton clawToggle = new JoystickButton(buttonPanel, 8);
+
+    /* Actual Buttons */
+    // JoystickButton groundState = new JoystickButton(buttonPanel, ButtonConstants.Ground);
+    // JoystickButton MidCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
+    // JoystickButton MidCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
+    // JoystickButton HighCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
     // JoystickButton HighCone = new JoystickButton(buttonPanel, ButtonConstants.HighCone);
     // JoystickButton ResetEncoder = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
     // JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
@@ -200,24 +200,54 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     // JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
     // JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
     // JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
+    /* Actual Buttons */
+
+
+    /*    TestButton Mapping */
+    JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.clawToggle);
+    JoystickButton armToggle = new JoystickButton(buttonPanel, ButtonConstants.armToggle);
+    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.clawOut);
+    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.clawIn);
+    JoystickButton vfBarD = new JoystickButton(buttonPanel, ButtonConstants.vfbarDown);
+    JoystickButton vfBarUp = new JoystickButton(buttonPanel, ButtonConstants.vfbarUp);
+   
+
+
 
 
     /* Command Mapping */
-    MidCone.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3)); //2
-    MidCube.onTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //4
-    toggleArm.whileTrue(new ArmToggleCommand(arm));
-    clawToggle.whileTrue(new ClawToggle(claw));
-    HighCube.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
-    //HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
-    groundState.onTrue(new VFBAREncoder(bar, arm, 68027));
-   // ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
+
+    /*Actual Command Mapping */
+    // MidCone.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //2
+    // MidCube.onTrue(new VFBAREncoder(bar, arm, 30786)); //4
+
+
+    // HighCube.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
+    // HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
+    // groundState.onTrue(new VFBAREncoder(bar, arm, 68027));
+    // ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
+
 
     // clawIn.whileTrue(new ClawIntake(claw, 1)); //9
     // clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
     // clawToggle.whileTrue(new ClawToggle(claw));
 
+
     // turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
     // turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
+    /*Actual Command Mapping */
+
+
+    /* Test Mapping */
+    clawToggle.onTrue(new ClawToggle(claw));
+    armToggle.onTrue(new ArmToggleCommand(arm));
+    clawOut.whileTrue(new ClawOuttake(claw, -1));
+    clawIn.whileTrue(new ClawIntake(claw, 1));
+    vfBarD.whileTrue(new VirtualFourBarCommand(bar, arm, 0.5));
+    vfBarUp.whileTrue(new VirtualFourBarCommand(bar, arm, -0.5));
+    /* Test Mapping */
+
+    /* Command Mapping */
 
   }
 
