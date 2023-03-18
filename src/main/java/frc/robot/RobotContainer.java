@@ -16,8 +16,10 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -36,11 +38,9 @@ import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
-import frc.robot.commands.Utils.Time;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -48,7 +48,6 @@ public class RobotContainer {
 
   /* Initializing Robot Subsystems */
   private final  Drivetrain drivetrain;
-  private Led myLed;
   private final Arm arm;
   private final Claw claw;
   private final VirtualFourBar bar;
@@ -68,7 +67,7 @@ public class RobotContainer {
    */
 
 
-  SendableChooser<Command> chooser = new SendableChooser<>();
+  public static SendableChooser<Command> chooser = new SendableChooser<>();
   public static HashMap<Command, String> autoMap = new HashMap<>();
 
   public Command ramAutoBuilder(String pathName, HashMap<String, Command> eventMap) {
@@ -79,7 +78,8 @@ public class RobotContainer {
       drivetrain::getWheelSpeeds, new PIDConstants(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
       drivetrain::tankDriveVolts, eventMap, true, drivetrain);
 
-    List<PathPlannerTrajectory> pathToFollow = PathPlanner.loadPathGroup(pathName, PathPlanner.getConstraintsFromPath(pathName));
+    List<PathPlannerTrajectory> pathToFollow = PathPlanner.loadPathGroup(pathName,
+          PathPlanner.getConstraintsFromPath(pathName));
     final Command auto = pathBuilder.fullAuto(pathToFollow);
     autoMap.put(auto, pathName);
     return auto;
@@ -90,7 +90,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
-    myLed = new Led(9, 60);
     arm = new Arm();
     claw = new Claw();
     bar = new VirtualFourBar();
@@ -106,8 +105,12 @@ public class RobotContainer {
     setBasicChargeAutoMap();
     setTwoCubeAuto();
 
+    Shuffleboard.getTab("AUTON").add(chooser).withSize(3, 1);
+    Command instantCmd = new InstantCommand();
+    chooser.setDefaultOption("Nothing", instantCmd);
+    autoMap.put(instantCmd, "nothing");
     chooser.addOption("Balance Auto Shishir", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
-    chooser.setDefaultOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, 0.5,claw, 0.5));
+    chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, 0.5,claw, 0.5));
     chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
 
   }
@@ -116,19 +119,19 @@ public class RobotContainer {
     AutoConstants.basicChargeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(2));
     AutoConstants.basicChargeAuto.put("Stop", new SequentialCommandGroup(
     new GetOnRamp(drivetrain), 
-    new BalanceCommand(0.39, myLed)));
+    new BalanceCommand(0.39)));
   }
 
   public void setTwoCubeAuto() {
     AutoConstants.twoCubeAuto.put("Start", new SequentialCommandGroup(
-    new ClawOuttake(claw, 0.5).withTimeout(1), new Time(500)));
+    new ClawOuttake(claw, 0.5).withTimeout(1)));
     AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(
-    new TurretTestCommand(turret, 0.3), 
+    new TurretTestCommand(turret, 0.3).withTimeout(1), 
     new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(1.3)));
     AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(
     new ClawIntake(claw, 0.5), 
     new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
-    AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3));
+    AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3).withTimeout(1));
     AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(
     new ArmExtendCommand(arm), 
     new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),

@@ -4,7 +4,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Led;
 
 public class BalanceCommand extends CommandBase {
     // Need to be tuned
@@ -13,11 +12,9 @@ public class BalanceCommand extends CommandBase {
     double angle;
     Drivetrain drive;
     double speedBalance;
-    Led myLed;
     public static boolean stop;
 
-    public BalanceCommand(double speedBalance, Led myLed) {
-        this.myLed = new Led(9, 60);
+    public BalanceCommand(double speedBalance) {
         addRequirements(drive);
         this.speedBalance = speedBalance;
     }
@@ -52,7 +49,6 @@ public class BalanceCommand extends CommandBase {
 
     @Override public void end(boolean interrupted) {
         System.out.println("BALANCE STOPPED");
-        myLed.rainbow();
         drive.setBreakMode();
     }
 
