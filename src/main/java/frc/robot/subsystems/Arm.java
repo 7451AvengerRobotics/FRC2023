@@ -18,8 +18,8 @@ public class Arm extends SubsystemBase{
         super();
         //initializing compressor and solenoid  
        compressor = new Compressor(0, PneumaticsModuleType.CTREPCM); //need to change module id 
-        armSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PortConstants.Arm[0],PortConstants.Arm[1]); 
-        lockSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, PortConstants.Arm[2]);
+        armSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PortConstants.Arm[0],PortConstants.Arm[2]); 
+        lockSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 5);
         //need to change module id
     }
    public void stop(){

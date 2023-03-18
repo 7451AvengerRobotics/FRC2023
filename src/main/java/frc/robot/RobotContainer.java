@@ -30,11 +30,10 @@ import frc.robot.commands.AutoCommands.BalanceCommand;
 import frc.robot.commands.AutoCommands.ComplexAuto;
 import frc.robot.commands.AutoCommands.GetOnRamp;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
-import frc.robot.commands.DriveTypes.TankDrive;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.VFBAREncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBarCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
+import frc.robot.commands.SimpleCommands.ArmCommands.ArmToggleCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawToggle;
@@ -64,7 +63,10 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    * 
    * 
+   * 
    */
+
+
 
 
   public static SendableChooser<Command> chooser = new SendableChooser<>();
@@ -85,8 +87,16 @@ public class RobotContainer {
     return auto;
   }
 
+    /**
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
+ * subsystems, commands, and trigger mappings) should be declared here.
+ */
 
-  
   public RobotContainer() {
     // Configure the trigger bindings
     drivetrain = new Drivetrain();
@@ -133,14 +143,26 @@ public class RobotContainer {
     new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
     AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3).withTimeout(1));
     AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(
-    new ArmExtendCommand(arm), 
     new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
     new ClawOuttake(claw, 0.5).withTimeout(1)));
   }
 
 
   
-
+  /**
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
+   */
 
 
   private void configureDriveTrain() {
@@ -149,15 +171,7 @@ public class RobotContainer {
 Sets the state of the type of drivetrain. For example if driver wants Arcade than the driver presses the A button to enter arcade mode.
 If the driver presses the B button than the drivtrain will reset back to Tank Drive
 */
-    if(controller.getAButtonPressed()){
-      driveState = true;
-    }
 
-    if(controller.getBButtonPressed()){
-      driveState = false;
-    }
-
-    if(driveState == true){
       drivetrain.setDefaultCommand(
         new ArcadeDrive(
             drivetrain,
@@ -165,15 +179,6 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
             controller::getLeftY,
             controller::getRightX,
             controller:: getLeftBumper));
-    }else{
-      drivetrain.setDefaultCommand(
-        new TankDrive(
-          drivetrain,
-          arm,
-          controller::getLeftY,
-          controller::getRightY,
-          controller::getRightBumper));
-    }
 }
 
 
@@ -186,31 +191,33 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     JoystickButton MidCube = new JoystickButton(buttonPanel, ButtonConstants.MidCube);
     JoystickButton MidCone = new JoystickButton(buttonPanel, ButtonConstants.MidCone);
     JoystickButton HighCube = new JoystickButton(buttonPanel, ButtonConstants.HighCube);
-    JoystickButton HighCone = new JoystickButton(buttonPanel, ButtonConstants.HighCone);
-    JoystickButton ResetEncoder = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
-    JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
-    JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
-    JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
-    JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
-    JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
-    
+    JoystickButton toggleArm = new JoystickButton(buttonPanel, 4);
+    JoystickButton clawToggle = new JoystickButton(buttonPanel, 8);
+    // JoystickButton HighCone = new JoystickButton(buttonPanel, ButtonConstants.HighCone);
+    // JoystickButton ResetEncoder = new JoystickButton(buttonPanel, ButtonConstants.ResetEncoder);
+    // JoystickButton clawToggle = new JoystickButton(buttonPanel, ButtonConstants.CLAW_TOGGLE);
+    // JoystickButton clawIn = new JoystickButton(buttonPanel, ButtonConstants.ClawIntake);
+    // JoystickButton clawOut = new JoystickButton(buttonPanel, ButtonConstants.ClawOuttake);
+    // JoystickButton turretLeft = new JoystickButton(buttonPanel, ButtonConstants.TurretLeft);
+    // JoystickButton turretRight = new JoystickButton(buttonPanel, ButtonConstants.TurretRight);
 
 
     /* Command Mapping */
-    MidCone.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //2
-    MidCube.onTrue(new VFBAREncoder(bar, arm, 30786)); //4
-
-    HighCube.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
-    HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
-    groundState.onTrue(new VFBAREncoder(bar, arm, 68027));
-    ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
-
-    clawIn.whileTrue(new ClawIntake(claw, 1)); //9
-    clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
+    MidCone.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3)); //2
+    MidCube.onTrue(new VirtualFourBarCommand(bar, arm, -0.3)); //4
+    toggleArm.whileTrue(new ArmToggleCommand(arm));
     clawToggle.whileTrue(new ClawToggle(claw));
+    HighCube.onTrue(new VFBAREncoder(bar, arm, 40000)); //3
+    //HighCone.onTrue(new VFBAREncoder(bar, arm, 40000));
+    groundState.onTrue(new VFBAREncoder(bar, arm, 68027));
+   // ResetEncoder.onTrue(new VFBAREncoder(bar, arm, 0)); //5
 
-    turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
-    turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
+    // clawIn.whileTrue(new ClawIntake(claw, 1)); //9
+    // clawOut.whileTrue(new ClawOuttake(claw, -1)); //10
+    // clawToggle.whileTrue(new ClawToggle(claw));
+
+    // turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
+    // turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
 
   }
 
