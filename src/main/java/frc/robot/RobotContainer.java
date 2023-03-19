@@ -210,7 +210,9 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
 
     lockSolenoid.onTrue(new SolenoidCommand(arm)); // 7
 
-
+    double power = (buttonPanel.getX())*0.3;
+    turret.turn(power);
+    
     turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
     turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
     /*Actual Command Mapping */
