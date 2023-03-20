@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
     //color = new ColorSensor();
     turret.zeroSensors();
     bar.zeroSensors();  
+    drivetrain.resetGyro();
   }
 
   /**
