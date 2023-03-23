@@ -3,15 +3,11 @@ package frc.robot.commands.AutoCommands;
 import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
-import frc.robot.commands.SimpleCommands.VirtualFourBar.VirtualFourBarCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
 import frc.robot.commands.SimpleCommands.ArmCommands.ArmRetractCommand;
-import frc.robot.commands.AutoCommands.BalanceCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;

@@ -1,13 +1,7 @@
 package frc.robot.commands.AutoCommands;
 
-import com.ctre.phoenix.sensors.Pigeon2;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.PortConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class BalanceCommand extends CommandBase {

@@ -8,22 +8,17 @@ import java.util.HashMap;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.PortConstants;
-import frc.robot.commands.AutoCommands.BalanceCommand;
 import frc.robot.commands.AutoCommands.ComplexAuto;
-import frc.robot.commands.AutoCommands.GetOnRamp;
 import frc.robot.commands.AutoCommands.TwoCubeAuto;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.SimpleCommands.SolenoidCommand;
@@ -51,7 +46,6 @@ public class RobotContainer {
   private final Turret turret;
   private final XboxController controller;
   private final Joystick buttonPanel;
-  private final GenericHID joystickPanel;
   private final Trigger rightBumper;
   
 
@@ -105,7 +99,6 @@ public class RobotContainer {
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
-    joystickPanel = new GenericHID(ButtonConstants.BUTTON_PANEL_PORT);
     rightBumper = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
 
   
@@ -124,10 +117,6 @@ public class RobotContainer {
     chooser.addOption("Balance Auto Timed2", new TwoCubeAuto(arm, drivetrain, -0.3,bar,claw, -1, turret, gyro));
     // chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
 
-    Command balanceTestCmd = new SequentialCommandGroup(
-      new GetOnRamp(drivetrain),
-      new BalanceCommand(drivetrain)
-    );
 
   }
 
