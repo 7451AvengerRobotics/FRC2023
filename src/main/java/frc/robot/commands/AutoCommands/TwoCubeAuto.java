@@ -4,10 +4,6 @@ import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.SimpleCommands.ClawCommands.ClawOuttake;
-import frc.robot.commands.SimpleCommands.TurretTestCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmExtendCommand;
-import frc.robot.commands.SimpleCommands.ArmCommands.ArmRetractCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
