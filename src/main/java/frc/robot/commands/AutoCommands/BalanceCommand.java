@@ -1,22 +1,27 @@
 package frc.robot.commands.AutoCommands;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PortConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class BalanceCommand extends CommandBase {
     // Need to be tuned
-    PIDController pid = new PIDController(DriveConstants.KP_DRIVE_VELOCITY, 0, 0);
+    PIDController pid = new PIDController(0.024, 0.001, 0.002);
     double speed;
     double angle;
     Drivetrain drive;
-    double speedBalance;
     public static boolean stop;
 
-    public BalanceCommand(double speedBalance) {
+    public BalanceCommand(Drivetrain drive) {
+
+        this.drive = drive;       
         addRequirements(drive);
-        this.speedBalance = speedBalance;
     }
 
     @Override
@@ -32,24 +37,28 @@ public class BalanceCommand extends CommandBase {
 
         System.out.println("Balance " + speed);
 
-        if (speed > -0.5) {
-            drive.tankDrive(speedBalance, speedBalance);
-        } else if (speed > 0.5) {
-            drive.tankDrive(-(speedBalance), -(speedBalance));
+        if (speed < -0.2) {
+            drive.setPower(-0.135);
+        } else if (speed > 0.2) {
+            drive.setPower(0.135);
         } else {
-            drive.tankDrive(-speed, -speed);
+            drive.setPower(speed);
         }
 
-        if (angle > (0 - 3) && angle < (0 + 3)) {
+        if (angle > (2 - 15) && angle < (2 + 10)) {
             System.out.println("ANGLE REACHED");
+            
             stop = true;
         }
+
+
 
     }
 
     @Override public void end(boolean interrupted) {
         System.out.println("BALANCE STOPPED");
         drive.setBreakMode();
+        drive.setPower(0);
     }
 
     @Override

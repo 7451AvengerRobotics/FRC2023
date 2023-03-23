@@ -9,6 +9,7 @@ public class GetOnRamp extends CommandBase{
     float startTime, timePassed;
     Drivetrain drive;
     public GetOnRamp(Drivetrain drive) {
+        this.drive = drive;
         addRequirements(drive);
         end = false;
     }
@@ -22,11 +23,11 @@ public class GetOnRamp extends CommandBase{
     public void execute() {
         System.out.println("RAMP");
         double pitch = Math.abs(drive.getGyroPitch());
-        if(pitch != 17) {
-            drive.tankDrive(-0.525, -0.525);
+        if(pitch != 15.8) {
+            drive.setPower(0.525);
         }
 
-        if (pitch < 18 && pitch > 16) {
+        if (pitch < 18 && pitch > 14) {
             end = true;
         }
     }
@@ -34,7 +35,7 @@ public class GetOnRamp extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         drive.setBreakMode();
-        drive.tankDrive(0, 0);
+        drive.setPower(0);
     }
 
     @Override

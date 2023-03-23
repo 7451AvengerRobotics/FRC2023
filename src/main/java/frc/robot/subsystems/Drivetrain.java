@@ -239,6 +239,10 @@ public class Drivetrain extends SubsystemBase {
     return gyro.getPitch();
   }
 
+  public double getGyroRoll() {
+    return gyro.getRoll();
+  }
+
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     leftMotors[0].setVoltage(leftVolts);
     rightMotors[0].setVoltage(rightVolts);

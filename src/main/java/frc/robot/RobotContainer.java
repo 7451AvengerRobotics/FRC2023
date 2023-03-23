@@ -4,11 +4,27 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
+import com.ctre.phoenix.sensors.Pigeon2;
+
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ButtonConstants;
+import frc.robot.Constants.PortConstants;
+import frc.robot.commands.AutoCommands.BalanceCommand;
+import frc.robot.commands.AutoCommands.ComplexAuto;
+import frc.robot.commands.AutoCommands.GetOnRamp;
+import frc.robot.commands.AutoCommands.TwoCubeAuto;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.SimpleCommands.SolenoidCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
@@ -29,11 +45,14 @@ public class RobotContainer {
   /* Initializing Robot Subsystems */
   private final  Drivetrain drivetrain;
   private final Arm arm;
+  private final Pigeon2 gyro;
   private final Claw claw;
   private final VirtualFourBar bar;
   private final Turret turret;
   private final XboxController controller;
   private final Joystick buttonPanel;
+  private final GenericHID joystickPanel;
+  private final Trigger rightBumper;
   
 
 /* Initializing Robot Subsystems */
@@ -48,8 +67,8 @@ public class RobotContainer {
 
 
 
-  // public static SendableChooser<Command> chooser = new SendableChooser<>();
-  // public static HashMap<Command, String> autoMap = new HashMap<>();
+  public static SendableChooser<Command> chooser = new SendableChooser<>();
+  public static HashMap<Command, String> autoMap = new HashMap<>();
 
   // public Command ramAutoBuilder(String pathName, HashMap<String, Command> eventMap) {
 
@@ -82,9 +101,14 @@ public class RobotContainer {
     arm = new Arm();
     claw = new Claw();
     bar = new VirtualFourBar();
+    gyro = new Pigeon2(PortConstants.Gyro);
     turret = new Turret();
     controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
+    joystickPanel = new GenericHID(ButtonConstants.BUTTON_PANEL_PORT);
+    rightBumper = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
+
+  
     configureBindings();
     configureDriveTrain();
     getAutonomousCommand();
@@ -92,13 +116,18 @@ public class RobotContainer {
     // setBasicChargeAutoMap();
     // setTwoCubeAuto();
 
-    // Shuffleboard.getTab("AUTON").add(chooser).withSize(3, 1);
-    // Command instantCmd = new InstantCommand();
-    // chooser.setDefaultOption("Nothing", instantCmd);
-    // autoMap.put(instantCmd, "nothing");
-    // chooser.addOption("Balance Auto Shishir", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
-    // chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, 0.5,claw, 0.5));
+    Shuffleboard.getTab("AUTON").add(chooser).withSize(3, 1);
+    Command instantCmd = new InstantCommand();
+    chooser.setDefaultOption("Nothing", instantCmd);
+    autoMap.put(instantCmd, "nothing");
+    chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, -0.3,claw, -0.8, turret, bar));
+    chooser.addOption("Balance Auto Timed2", new TwoCubeAuto(arm, drivetrain, -0.3,bar,claw, -1, turret, gyro));
     // chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
+
+    Command balanceTestCmd = new SequentialCommandGroup(
+      new GetOnRamp(drivetrain),
+      new BalanceCommand(drivetrain)
+    );
 
   }
 
@@ -183,33 +212,34 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
 
     JoystickButton lockSolenoid = new JoystickButton(buttonPanel, ButtonConstants.lockSolenoid);
 
+    
+
     /* Actual Buttons */
 
 
 
 
     /*Actual Command Mapping */
-   midCone.onTrue(new EncoderandArm(bar, arm, 62464)); // 5
-   midCube.onTrue(new StandardEncoder(bar, arm, 9732)); // 6
+   midCone.onTrue(new EncoderandArm(bar, arm, 58464)); // 5
+   midCube.onTrue(new StandardEncoder(bar, arm, 13500)); // 6
 
 
     highCube.onTrue(new EncoderandArm(bar, arm, 30786)); // 2
-    grabObject.onTrue(new StandardEncoder(bar, arm, 69977)); // 1
+    grabObject.onTrue(new StandardEncoder(bar, arm, 68800)); // 1
     resetBar.onTrue(new ResetVFbarEncoder(bar, arm, 0)); // 11
 
 
     clawIntake.whileTrue(new ClawIntake(claw, 1)); // 3
     clawOuttake.whileTrue(new ClawOuttake(claw, -1)); // 4
-    clawToggle.whileTrue(new ClawToggle(claw)); // 8
+    clawToggle.whileTrue(new EncoderandArm(bar, arm, 35000)); // 8
 
     lockSolenoid.onTrue(new SolenoidCommand(arm)); // 7
 
-    double power = (buttonPanel.getX())*0.3;
-    turret.turn(power);
+
     
-    turretRight.whileTrue(new TurretTestCommand(turret, 0.3));
-    turretLeft.whileTrue(new TurretTestCommand(turret, -0.3));
-    /*Actual Command Mapping */
+    turretRight.whileTrue(new TurretTestCommand(turret, 0.5));
+    turretLeft.whileTrue(new TurretTestCommand(turret, -0.5));
+    rightBumper.whileTrue(new ClawToggle(claw));   /*Actual Command Mapping */
 
 
 
@@ -251,9 +281,10 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
   }
 
   public void robotPeriodic() {
+ 
   }
 
   public Command getAutonomousCommand() {
- return null;
+    return chooser.getSelected();
 }
 }

@@ -23,6 +23,8 @@ public class DriveBackAuto extends CommandBase{
     
     @Override
     public void end(boolean interrupted){
+        drive.setBreakMode();
+        drive.tankDrive(0, 0);
     }
 
     @Override

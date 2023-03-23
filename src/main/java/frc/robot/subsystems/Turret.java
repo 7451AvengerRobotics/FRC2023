@@ -23,8 +23,8 @@ public class Turret extends SubsystemBase {
         turret.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         
 
-        turret.configForwardSoftLimitThreshold(680000);
-        turret.configReverseSoftLimitThreshold(-642073);
+        turret.configForwardSoftLimitThreshold(135000);
+        turret.configReverseSoftLimitThreshold(-135000);
         turret.configForwardSoftLimitEnable(true);
         turret.configReverseSoftLimitEnable(true);
 

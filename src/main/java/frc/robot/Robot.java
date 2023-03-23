@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,6 +46,8 @@ public class Robot extends TimedRobot {
     turret.zeroSensors();
     bar.zeroSensors();  
     drivetrain.resetGyro();
+    CameraServer.startAutomaticCapture();
+    System.out.println("hey does this workkkkkkk plssssss workkkk");
   }
 
   /**
@@ -63,7 +66,9 @@ public class Robot extends TimedRobot {
 
 
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Gyro", drivetrain.getGyroYaw());
+    SmartDashboard.putNumber("Yaw", drivetrain.getGyroYaw());
+    SmartDashboard.putNumber("Pitch", drivetrain.getGyroPitch());
+    SmartDashboard.putNumber("Roll", drivetrain.getGyroRoll());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
   }
