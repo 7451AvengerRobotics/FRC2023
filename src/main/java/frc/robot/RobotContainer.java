@@ -9,6 +9,7 @@ import java.util.HashMap;
 import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -21,6 +22,7 @@ import frc.robot.Constants.PortConstants;
 import frc.robot.commands.AutoCommands.ComplexAuto;
 import frc.robot.commands.AutoCommands.Encoder1Auto;
 import frc.robot.commands.AutoCommands.Encoder2Auto;
+import frc.robot.commands.DriveTypes.AlexDrive;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.SimpleCommands.SolenoidCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
@@ -45,7 +47,7 @@ public class RobotContainer {
   private final Claw claw;
   private final VirtualFourBar bar;
   private final Turret turret;
-  private final XboxController controller;
+  private final PS4Controller controller;
   private final Joystick buttonPanel;
   private final Trigger rightBumper;
   
@@ -98,7 +100,7 @@ public class RobotContainer {
     bar = new VirtualFourBar();
     gyro = new Pigeon2(PortConstants.Gyro);
     turret = new Turret();
-    controller = new XboxController(ButtonConstants.CONTROLLER_PORT);
+    controller = new PS4Controller(ButtonConstants.CONTROLLER_PORT);
     buttonPanel = new Joystick(ButtonConstants.BUTTON_PANEL_PORT);
     rightBumper = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
 
@@ -173,13 +175,23 @@ Sets the state of the type of drivetrain. For example if driver wants Arcade tha
 If the driver presses the B button than the drivtrain will reset back to Tank Drive
 */
 
-      drivetrain.setDefaultCommand(
-        new ArcadeDrive(
-            drivetrain,
-            arm,
-            controller::getLeftY,
-            controller::getRightX,
-            controller:: getLeftBumper));
+      // drivetrain.setDefaultCommand(
+      //   new ArcadeDrive(
+      //       drivetrain,
+      //       arm,
+      //       controller::getLeftY,
+      //       controller::getRightX,
+      //       controller:: getLeftBumper));
+
+
+            drivetrain.setDefaultCommand( 
+              new AlexDrive( 
+              drivetrain, 
+              controller::getL2Axis, 
+              controller::getR2Axis, 
+              controller::getLeftX, 
+              controller::getL1Button, 
+              controller::getR1Button));
 }
 
 
