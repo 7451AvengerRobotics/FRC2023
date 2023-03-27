@@ -49,7 +49,6 @@ public class Robot extends TimedRobot {
     bar.zeroSensors();  
     drivetrain.resetGyro();
     CameraServer.startAutomaticCapture();
-    System.out.println("hey does this workkkkkkk plssssss workkkk");
   }
 
   /**
@@ -71,6 +70,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Yaw", drivetrain.getGyroYaw());
     SmartDashboard.putNumber("Pitch", drivetrain.getGyroPitch());
     SmartDashboard.putNumber("Roll", drivetrain.getGyroRoll());
+    SmartDashboard.putString("Rotation2d", toString());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
     SmartDashboard.putNumber("ColorSensor Value ", color.getProxmity()); 

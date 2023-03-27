@@ -36,7 +36,8 @@ public class ArcadeDrive extends CommandBase {
     addRequirements(drive, arm);
   }
 
-  @Override
+
+@Override
   public void execute() {
     if (arm.getArmState() == true){
       double scalar = arm.getArmState() ? 0.5: 0.5;
