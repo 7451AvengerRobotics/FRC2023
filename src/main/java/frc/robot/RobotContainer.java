@@ -19,7 +19,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.commands.AutoCommands.ComplexAuto;
-import frc.robot.commands.AutoCommands.TwoCubeAuto;
+import frc.robot.commands.AutoCommands.Encoder1Auto;
+import frc.robot.commands.AutoCommands.Encoder2Auto;
 import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.SimpleCommands.SolenoidCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
@@ -109,12 +110,17 @@ public class RobotContainer {
     // setBasicChargeAutoMap();
     // setTwoCubeAuto();
 
-    Shuffleboard.getTab("AUTON").add(chooser).withSize(3, 1);
+    Shuffleboard.getTab("Auton").add(chooser).withSize(3, 1);
     Command instantCmd = new InstantCommand();
     chooser.setDefaultOption("Nothing", instantCmd);
     autoMap.put(instantCmd, "nothing");
-    chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, -0.3,claw, -0.8, turret, bar));
-    chooser.addOption("Balance Auto Timed2", new TwoCubeAuto(arm, drivetrain, -0.3,bar,claw, -1, turret, gyro));
+    chooser.addOption("Community With Cube Leave", new ComplexAuto(arm, drivetrain, -0.3,claw, -0.3, turret, bar));
+    chooser.addOption("HighCubeNoLeave", new Encoder2Auto(arm, drivetrain, -0.3,bar,claw, -1, turret, gyro));
+    chooser.addOption("Balance Auto With Gyro", new Encoder1Auto(arm, drivetrain, -0.3,bar,claw, -0.25, turret, gyro));
+
+
+
+
     // chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
 
 
@@ -210,16 +216,16 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
 
     /*Actual Command Mapping */
    midCone.onTrue(new EncoderandArm(bar, arm, 58464)); // 5
-   midCube.onTrue(new StandardEncoder(bar, arm, 13500)); // 6
+   midCube.onTrue(new StandardEncoder(bar, arm, 13800)); // 6
 
 
     highCube.onTrue(new EncoderandArm(bar, arm, 30786)); // 2
-    grabObject.onTrue(new StandardEncoder(bar, arm, 68800)); // 1
+    grabObject.onTrue(new StandardEncoder(bar, arm, 69900)); // 1
     resetBar.onTrue(new ResetVFbarEncoder(bar, arm, 0)); // 11
 
 
     clawIntake.whileTrue(new ClawIntake(claw, 1)); // 3
-    clawOuttake.whileTrue(new ClawOuttake(claw, -1)); // 4
+    clawOuttake.whileTrue(new ClawOuttake(claw, -0.7)); // 4
     clawToggle.whileTrue(new EncoderandArm(bar, arm, 35000)); // 8
 
     lockSolenoid.onTrue(new SolenoidCommand(arm)); // 7

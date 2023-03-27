@@ -27,19 +27,19 @@ public class BalanceCommand extends CommandBase {
     @Override
     public void execute() {
         angle = drive.getGyroPitch();
-        speed = pid.calculate(angle, 0);
+        speed = pid.calculate(angle, 2.5);
 
         System.out.println("Balance " + speed);
 
-        if (speed < -0.2) {
+        if (speed < -0.15) {
             drive.setPower(-0.135);
-        } else if (speed > 0.2) {
+        } else if (speed > 0.15) {
             drive.setPower(0.135);
         } else {
             drive.setPower(speed);
         }
 
-        if (angle > (2 - 15) && angle < (2 + 10)) {
+        if (angle > (2 - 20) && angle < (2 + 8)) {
             System.out.println("ANGLE REACHED");
             
             stop = true;

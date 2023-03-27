@@ -39,15 +39,15 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void execute() {
     if (arm.getArmState() == true){
-      double scalar = arm.getArmState() ? 0.4: 0.4;
+      double scalar = arm.getArmState() ? 0.5: 0.5;
       drive.arcadeDrive(power.getAsDouble() * scalar, turn.getAsDouble() * -scalar);
     }
     else if(turbo.getAsBoolean() == true){
-      double scalar = turbo.getAsBoolean() ? 0.8: 0.8;
+      double scalar = turbo.getAsBoolean() ? 1: 1;
       drive.arcadeDrive(power.getAsDouble() * scalar, turn.getAsDouble() * -scalar);
     }
     else{
-      double scalar = turbo.getAsBoolean() ? .6 : .6;
+      double scalar = turbo.getAsBoolean() ? 0.7 : 0.7;
       drive.arcadeDrive(power.getAsDouble() * scalar, turn.getAsDouble() * -scalar);
     }
 

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
@@ -27,6 +28,7 @@ public class Robot extends TimedRobot {
   private Drivetrain drivetrain;
   private Turret turret;
   private VirtualFourBar bar;
+  private ColorSensor color;
   boolean myAutonFinished = false;
   
   
@@ -42,7 +44,7 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain();
     turret = new Turret();
     bar = new VirtualFourBar(); 
-    //color = new ColorSensor();
+    color = new ColorSensor();
     turret.zeroSensors();
     bar.zeroSensors();  
     drivetrain.resetGyro();
@@ -71,6 +73,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Roll", drivetrain.getGyroRoll());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
+    SmartDashboard.putNumber("ColorSensor Value ", color.getProxmity()); 
+    SmartDashboard.putNumber("ColorSensor Color ", color.detectColor());
+    SmartDashboard.putBoolean("Dected Object? ", color.detectObject());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

@@ -13,7 +13,8 @@ public class ColorSensor extends SubsystemBase {
     private ColorSensorV3 color;
     ColorMatchResult match;
     private final ColorMatch colorMatch;
-    private final Color kTarget = new Color(255,0 , 255);
+    private final Color pTarget = new Color(255,0 , 255);
+    private final Color yTarget = new Color(255, 255, 0);
 
 
     public ColorSensor(){
@@ -22,13 +23,9 @@ public class ColorSensor extends SubsystemBase {
         this.i2cPort =  I2C.Port.kOnboard;
         color = new ColorSensorV3(i2cPort);
         this.colorMatch = new ColorMatch();
-        colorMatch.addColorMatch(kTarget);
+        colorMatch.addColorMatch(pTarget);
+        colorMatch.addColorMatch(yTarget);
         
-        
-
-      
-
-
 
     }
 
@@ -42,8 +39,15 @@ public class ColorSensor extends SubsystemBase {
 
     public double detectColor(){
         Color detectedColor = color.getColor();
-        return detectedColor.red;
+        return detectedColor.green;
     }
     
+    public boolean detectObject(){
+        if(getProxmity() >120){
+            return true;
+        }else{
+        return false;
+        }
+    }
     
 }
