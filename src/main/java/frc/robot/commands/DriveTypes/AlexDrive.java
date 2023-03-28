@@ -16,7 +16,6 @@ public class AlexDrive extends CommandBase {
   private final SlewRateLimiter speedFilter;
   private final SlewRateLimiter turnFilter;
   private final SlewRateLimiter turboFilter;
-  private final SlewRateLimiter  turnMultFilter;
 
   /**
    * Creates a new DefaultDrive.
@@ -36,7 +35,6 @@ public class AlexDrive extends CommandBase {
     this.turbo = turbo;
     speedFilter = new SlewRateLimiter(1.5);
     turnFilter = new SlewRateLimiter(3);
-    turnMultFilter = new SlewRateLimiter(3);
     turboFilter = new SlewRateLimiter(2);
     addRequirements(drive);
   }
@@ -45,7 +43,7 @@ public class AlexDrive extends CommandBase {
   public void execute() {
     double speed = speedFilter.calculate(((reverse.getAsDouble() * -1) + forward.getAsDouble()) * .37);
     double turnMultiplier = turn.getAsBoolean() ? .5 : 1;
-    double rotate = turnFilter.calculate(rotation.getAsDouble() * .75);
+    double rotate = -turnFilter.calculate(rotation.getAsDouble() * .75);
     double turboNumber = turboFilter.calculate(turbo.getAsBoolean() ? 10 : 1);
     drive.curvatureDrive(speed*turboNumber, rotate*turnMultiplier, turn.getAsBoolean());
     // if (turn.getAsBoolean()) {

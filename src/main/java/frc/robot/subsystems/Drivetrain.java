@@ -257,4 +257,8 @@ public class Drivetrain extends SubsystemBase {
     gyro.setYaw(0);
   }
 
+public void curvatureDrive(double d, double e, boolean asBoolean) {
+  differentialDrive.curvatureDrive(d,e,asBoolean);
+}
+
 }
