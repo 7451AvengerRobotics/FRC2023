@@ -1,11 +1,16 @@
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,7 +18,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PortConstants;
 import frc.robot.Constants.DriveConstants;
@@ -30,6 +38,7 @@ public class Drivetrain extends SubsystemBase {
   static final double kOffBalanceAngleThresholdDegrees = 10;
   static final double kOnBalanceAngleThresholdDegrees = 5;
   Pose2d pose;
+  public Field2d m_field = new Field2d();
 
   /*
    * Calling the different items needed for the autonomous and differential drive
@@ -103,6 +112,13 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].configOpenloopRamp(1);
     rightMotors[1].configOpenloopRamp(1);
 
+    resetEncoders();
+    setBreakMode();
+    resetGyro();
+
+
+    Shuffleboard.getTab("AUTON").add(m_field).withSize(7, 4).withPosition(3, 0);
+
   }
 
   @Override
@@ -115,6 +131,8 @@ public class Drivetrain extends SubsystemBase {
     // differentialDrive.setSafetyEnabled(false);
     // differentialDrive.setExpiration(.1);
     differentialDrive.feed();
+
+    m_field.setRobotPose(getPose());
   }
 
 
@@ -127,6 +145,17 @@ public class Drivetrain extends SubsystemBase {
    */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
+  }
+
+  public void showTraj(String pathName) {
+    List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup(pathName,
+    PathPlanner.getConstraintsFromPath(pathName));
+    m_field.getObject("Field").setTrajectory(new Trajectory());
+    m_field.getObject("Field").setTrajectory(path.get(0));
+  }
+
+  public void showTraj() {
+    m_field.getObject("Field").setTrajectory(new Trajectory());
   }
 
   /**
@@ -249,16 +278,12 @@ public class Drivetrain extends SubsystemBase {
     differentialDrive.feed();
   }
 
- 
 
 
 
   public void resetGyro() {
     gyro.setYaw(0);
   }
-
-public void curvatureDrive(double d, double e, boolean asBoolean) {
-  differentialDrive.curvatureDrive(d,e,asBoolean);
-}
+  
 
 }

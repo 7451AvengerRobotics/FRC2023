@@ -30,9 +30,7 @@ import frc.robot.Constants.ButtonConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.commands.AutoCommands.ComplexAuto;
-import frc.robot.commands.AutoCommands.Encoder1Auto;
-import frc.robot.commands.AutoCommands.Encoder2Auto;
-import frc.robot.commands.DriveTypes.AlexDrive;
+import frc.robot.commands.DriveTypes.ArcadeDrive;
 import frc.robot.commands.SimpleCommands.SolenoidCommand;
 import frc.robot.commands.SimpleCommands.TurretTestCommand;
 import frc.robot.commands.SimpleCommands.ClawCommands.ClawIntake;
@@ -44,6 +42,7 @@ import frc.robot.commands.SimpleCommands.VirtualFourBar.StandardEncoder;
 import frc.robot.commands.SimpleCommands.VirtualFourBar.VirtualFourBarCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
@@ -59,7 +58,9 @@ public class RobotContainer {
   private final Turret turret;
   private final PS4Controller controller;
   private final Joystick buttonPanel;
+  private final ColorSensor color;
   private final Trigger rightBumper;
+
   
 
 /* Initializing Robot Subsystems */
@@ -74,16 +75,26 @@ public class RobotContainer {
 
 
 
-  public static SendableChooser<Command> chooser = new SendableChooser<>();
+ 
   public static HashMap<Command, String> autoMap = new HashMap<>();
 
   public Command ramAutoBuilder(String pathName, HashMap<String, Command> eventMap) {
 
-    RamseteAutoBuilder pathBuilder = new RamseteAutoBuilder(drivetrain::getPose, drivetrain::resetOdometry, 
-      new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA), DriveConstants.K_DRIVE_KINEMATICS, 
-      new SimpleMotorFeedforward(DriveConstants.KS_VOLTS, DriveConstants.KV_VOLT_SECONDS_PER_METER, DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER), 
-      drivetrain::getWheelSpeeds, new PIDConstants(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
-      drivetrain::tankDriveVolts, eventMap, true, drivetrain);
+    RamseteAutoBuilder pathBuilder = new RamseteAutoBuilder(
+      drivetrain::getPose, 
+      drivetrain::resetOdometry, 
+      new RamseteController(DriveConstants.K_RAMSETE, DriveConstants.K_RAMSETE_ZETA), 
+      DriveConstants.K_DRIVE_KINEMATICS, 
+      new SimpleMotorFeedforward(
+        DriveConstants.KS_VOLTS, 
+        DriveConstants.KV_VOLT_SECONDS_PER_METER, 
+        DriveConstants.KA_VOLT_SECONDS_SQUARED_PER_METER), 
+      drivetrain::getWheelSpeeds, 
+      new PIDConstants(DriveConstants.KP_DRIVE_VELOCITY, 0, 0), 
+      drivetrain::tankDriveVolts, 
+      eventMap, 
+      true, 
+      drivetrain);
 
     List<PathPlannerTrajectory> pathToFollow = PathPlanner.loadPathGroup(pathName,
           PathPlanner.getConstraintsFromPath(pathName));
@@ -91,6 +102,8 @@ public class RobotContainer {
     autoMap.put(auto, pathName);
     return auto;
   }
+
+  public static SendableChooser<Command> chooser = new SendableChooser<>();
 
     /**
  * This class is where the bulk of the robot should be declared. Since
@@ -108,6 +121,7 @@ public class RobotContainer {
     arm = new Arm();
     claw = new Claw();
     bar = new VirtualFourBar();
+    color = new ColorSensor();
     gyro = new Pigeon2(PortConstants.Gyro);
     turret = new Turret();
     controller = new PS4Controller(ButtonConstants.CONTROLLER_PORT);
@@ -122,19 +136,13 @@ public class RobotContainer {
     setBasicChargeAutoMap();
     setTwoCubeAuto();
 
-    Shuffleboard.getTab("Auton").add(chooser).withSize(3, 1);
+    Shuffleboard.getTab("AUTON").add(chooser).withSize(3, 1);
     Command instantCmd = new InstantCommand();
     chooser.setDefaultOption("Nothing", instantCmd);
     autoMap.put(instantCmd, "nothing");
-    chooser.addOption("Community With Cube Leave", new ComplexAuto(arm, drivetrain, -0.3,claw, -0.3, turret, bar));
-    chooser.addOption("HighCubeNoLeave", new Encoder2Auto(arm, drivetrain, -0.3,bar,claw, -1, turret, gyro));
-    chooser.addOption("Balance Auto With Gyro", new Encoder1Auto(arm, drivetrain, -0.3,bar,claw, -0.25, turret, gyro));
-
-
-
-
+    chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, -0.3,claw, -0.8, turret, bar));
     chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
-    chooser.addOption("Cube and park", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
+    chooser.addOption("2CubeAuto", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
 
 
   }
@@ -146,17 +154,17 @@ public class RobotContainer {
 
   public void setTwoCubeAuto() {
     AutoConstants.twoCubeAuto.put("Start", new SequentialCommandGroup(
-    new ClawOuttake(claw, 0.5).withTimeout(1)));
-    AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(
-    new TurretTestCommand(turret, 0.3).withTimeout(1), 
-    new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(1.3)));
+      new ClawOuttake(claw, 0.5).withTimeout(0.5)));
+      AutoConstants.twoCubeAuto.put("IntakeArm", new ParallelCommandGroup(
+      new TurretTestCommand(turret, 0.3).withTimeout(1), 
+      new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(1.3)));
     AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(
-    new ClawIntake(claw, 0.5), 
-    new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
+      new ClawIntake(claw, 0.5), 
+      new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
     AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3).withTimeout(1));
     AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(
-    new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
-    new ClawOuttake(claw, 0.5).withTimeout(1)));
+      new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
+      new ClawOuttake(claw, 0.5).withTimeout(1)));
   }
 
 
@@ -184,23 +192,13 @@ Sets the state of the type of drivetrain. For example if driver wants Arcade tha
 If the driver presses the B button than the drivtrain will reset back to Tank Drive
 */
 
-      // drivetrain.setDefaultCommand(
-      //   new ArcadeDrive(
-      //       drivetrain,
-      //       arm,
-      //       controller::getLeftY,
-      //       controller::getRightX,
-      //       controller:: getLeftBumper));
-
-
-            drivetrain.setDefaultCommand( 
-              new AlexDrive( 
-              drivetrain, 
-              controller::getR2Axis, 
-              controller::getL2Axis, 
-              controller::getLeftX, 
-              controller::getL1Button, 
-              controller::getR1Button));
+      drivetrain.setDefaultCommand(
+        new ArcadeDrive(
+            drivetrain,
+            arm,
+            controller::getLeftY,
+            controller::getRightX,
+            controller:: getR1Button));
 }
 
 
@@ -231,22 +229,23 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     
 
     /* Actual Buttons */
+    
 
 
 
 
     /*Actual Command Mapping */
    midCone.onTrue(new EncoderandArm(bar, arm, 58464)); // 5
-   midCube.onTrue(new StandardEncoder(bar, arm, 13800)); // 6
+   midCube.onTrue(new StandardEncoder(bar, arm, 13500)); // 6
 
 
     highCube.onTrue(new EncoderandArm(bar, arm, 30786)); // 2
-    grabObject.onTrue(new StandardEncoder(bar, arm, 69900)); // 1
+    grabObject.onTrue(new StandardEncoder(bar, arm, 72500)); // 1
     resetBar.onTrue(new ResetVFbarEncoder(bar, arm, 0)); // 11
 
 
-    clawIntake.whileTrue(new ClawIntake(claw, 1)); // 3
-    clawOuttake.whileTrue(new ClawOuttake(claw, -0.7)); // 4
+    clawIntake.whileFalse(new ClawIntake(claw, 1)); // 3
+    clawOuttake.whileTrue(new ClawOuttake(claw, -1)); // 4
     clawToggle.whileTrue(new EncoderandArm(bar, arm, 35000)); // 8
 
     lockSolenoid.onTrue(new SolenoidCommand(arm)); // 7
@@ -256,8 +255,6 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     turretRight.whileTrue(new TurretTestCommand(turret, 0.5));
     turretLeft.whileTrue(new TurretTestCommand(turret, -0.5));
     rightBumper.whileTrue(new ClawToggle(claw));   /*Actual Command Mapping */
-
-
 
 
 
@@ -297,8 +294,11 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
   }
 
   public void robotPeriodic() {
- 
+    while(color.getProximity()>1000){
+      claw.extend();
+    }
   }
+  
 
   public Command getAutonomousCommand() {
     return chooser.getSelected();

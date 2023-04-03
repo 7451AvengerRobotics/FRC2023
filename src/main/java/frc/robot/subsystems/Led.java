@@ -12,16 +12,16 @@ public class Led extends SubsystemBase{
     private int m_rainbowFirstPixelHue;
 
 
-    public Led(int port, int length){
+    public Led(){
         // PWM port
         // Must be a PWM header, not MXP or DIO
-        led = new AddressableLED(port);
+        led = new AddressableLED(1);
 
 
         // Reuse buffer
         // Default to a length of 60, start empty output
         // Length is expensive to set, so only set it once, then just update data
-        ledBuffer = new AddressableLEDBuffer(length);
+        ledBuffer = new AddressableLEDBuffer(126);
         led.setLength(ledBuffer.getLength());
 
 

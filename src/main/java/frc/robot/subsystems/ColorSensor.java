@@ -33,7 +33,7 @@ public class ColorSensor extends SubsystemBase {
 
 
 
-    public int getProxmity(){
+    public int getProximity(){
        return color.getProximity();
     }
 
@@ -43,7 +43,7 @@ public class ColorSensor extends SubsystemBase {
     }
     
     public boolean detectObject(){
-        if(getProxmity() >120){
+        if(getProximity() >120){
             return true;
         }else{
         return false;

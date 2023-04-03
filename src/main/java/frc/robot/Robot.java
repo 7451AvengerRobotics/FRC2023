@@ -5,13 +5,22 @@
 package frc.robot;
 
 
+import java.util.Map;
+
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
 
@@ -28,10 +37,16 @@ public class Robot extends TimedRobot {
   private Drivetrain drivetrain;
   private Turret turret;
   private VirtualFourBar bar;
-  private ColorSensor color;
-  boolean myAutonFinished = false;
-  
-  
+  private ColorSensor color;  
+  private Led led;
+  ShuffleboardTab autoTab = Shuffleboard.getTab("AUTON");
+  GenericEntry allianceColor = 
+    autoTab.add("Alliance", true)
+    .withProperties(Map.of("colorWhenTrue", "blue"))
+    .withPosition(0,1)
+    .withSize(3,1)
+    .getEntry();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -42,12 +57,12 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     drivetrain = new Drivetrain();
+    led = new Led();
     turret = new Turret();
     bar = new VirtualFourBar(); 
     color = new ColorSensor();
     turret.zeroSensors();
     bar.zeroSensors();  
-    drivetrain.resetGyro();
     CameraServer.startAutomaticCapture();
   }
 
@@ -73,7 +88,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("Rotation2d", toString());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
-    SmartDashboard.putNumber("ColorSensor Value ", color.getProxmity()); 
+    SmartDashboard.putNumber("ColorSensor Value ", color.getProximity()); 
     SmartDashboard.putNumber("ColorSensor Color ", color.detectColor());
     SmartDashboard.putBoolean("Dected Object? ", color.detectObject());
   }
@@ -83,11 +98,30 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if (RobotContainer.autoMap.get(RobotContainer.chooser.getSelected()) != "nothing" && RobotContainer.autoMap.get(RobotContainer.chooser.getSelected()) != "test") {
+      drivetrain.showTraj(RobotContainer.autoMap.get(RobotContainer.chooser.getSelected()));
+    } else {
+      drivetrain.showTraj();
+    }
+
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+      allianceColor.setBoolean(true);
+    } else if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+      allianceColor.setBoolean(false);
+    } else {
+      allianceColor.setString("error");
+    }
+
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    drivetrain.setBreakMode();
+    drivetrain.resetEncoders();
+    drivetrain.resetGyro();
+    drivetrain.resetOdometry(new Pose2d(0,0, new Rotation2d()));
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -109,6 +143,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    led.setColor(255, 0, 0);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -116,7 +151,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {

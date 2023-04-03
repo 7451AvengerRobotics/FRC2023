@@ -6,7 +6,7 @@ import frc.robot.subsystems.Claw;
 public class ClawIntake extends CommandBase{
     private final Claw claw;
     private final double power;
-    public ClawIntake(Claw claw,  double power){
+    public ClawIntake(Claw claw, double power){
         this.claw = claw;
         this.power = power;
         addRequirements(claw);
@@ -19,6 +19,7 @@ public class ClawIntake extends CommandBase{
     
     @Override 
     public void execute(){
+
         claw.setPower(power);
     }
     
