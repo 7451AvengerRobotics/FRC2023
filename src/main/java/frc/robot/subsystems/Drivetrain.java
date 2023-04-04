@@ -117,7 +117,7 @@ public class Drivetrain extends SubsystemBase {
     resetGyro();
 
 
-    Shuffleboard.getTab("AUTON").add(m_field).withSize(7, 4).withPosition(3, 0);
+    //Shuffleboard.getTab("AUTON").add(m_field).withSize(7, 4).withPosition(3, 0);
 
   }
 

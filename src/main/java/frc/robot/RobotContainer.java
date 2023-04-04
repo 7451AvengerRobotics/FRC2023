@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import java.util.HashMap;
@@ -142,7 +138,7 @@ public class RobotContainer {
     autoMap.put(instantCmd, "nothing");
     chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, -0.3,claw, -0.8, turret, bar));
     chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
-    chooser.addOption("2CubeAuto", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
+    chooser.addOption("BalanceChargePath", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
 
 
   }
