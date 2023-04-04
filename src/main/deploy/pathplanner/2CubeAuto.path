@@ -30,12 +30,12 @@
         "y": 0.9414108507932325
       },
       "prevControl": {
-        "x": 4.951545561454115,
-        "y": 0.9223924497671074
+        "x": 4.951409722662696,
+        "y": 0.9414108507932325
       },
       "nextControl": {
-        "x": 4.951545561454115,
-        "y": 0.9223924497671074
+        "x": 4.951409722662696,
+        "y": 0.9414108507932325
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -43,7 +43,9 @@
       "isLocked": true,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "V4Barlift"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
