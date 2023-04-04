@@ -155,8 +155,8 @@ public class RobotContainer {
       new TurretTestCommand(turret, 0.3).withTimeout(1), 
       new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(1.3)));
     AutoConstants.twoCubeAuto.put("Intake", new SequentialCommandGroup(
-      new ClawIntake(claw, 0.5), 
-      new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(2)));
+      new ClawIntake(claw, 1), 
+      new VirtualFourBarCommand(bar, arm, 0.3).withTimeout(1)));
     AutoConstants.twoCubeAuto.put("TurretFlip", new TurretTestCommand(turret, -0.3).withTimeout(1));
     AutoConstants.twoCubeAuto.put("Stop", new SequentialCommandGroup(
       new VirtualFourBarCommand(bar, arm, -0.3).withTimeout(0.5),
