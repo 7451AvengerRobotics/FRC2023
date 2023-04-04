@@ -43,9 +43,7 @@
       "isLocked": true,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "V4Barlift"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
