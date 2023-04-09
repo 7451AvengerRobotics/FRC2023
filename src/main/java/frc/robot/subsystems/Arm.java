@@ -16,8 +16,8 @@ public class Arm extends SubsystemBase{
         super();
         //initializing compressor and solenoid  
        compressor = new Compressor(0, PneumaticsModuleType.CTREPCM); //need to change module id 
-        armSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, PortConstants.Arm[0]); 
-        lockSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 5);
+        armSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, PortConstants.Arm[1]); 
+        lockSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 6);
         //need to change module id
     }
    public void stop(){
@@ -30,14 +30,14 @@ public class Arm extends SubsystemBase{
 
    public void extend(){
     //sets the solenoid output to on
-    armSolenoid.set(true);
-    isExtended = true;
+    armSolenoid.set(false);
+    isExtended = false;
    }
 
    public void retract(){
     //sets the solenoid output to off
-    armSolenoid.set(false);
-    isExtended = false;
+    armSolenoid.set(true);
+    isExtended = true;
    }
 
    public void toggle(){

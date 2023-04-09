@@ -21,12 +21,21 @@ public class Turret extends SubsystemBase {
         
 //Configures the sensor to an integrated sensor
         turret.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        turret.setSensorPhase(true);
+        turret.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TurretConstants.kTimeoutMs);  
+        turret.selectProfileSlot(0, 0);
+        turret.setSelectedSensorPosition(0, 0,TurretConstants.kTimeoutMs);
         
 
         turret.configForwardSoftLimitThreshold(140000);
         turret.configReverseSoftLimitThreshold(-140000);
         turret.configForwardSoftLimitEnable(true);
         turret.configReverseSoftLimitEnable(true);
+
+
+        turret.config_kP(1, 0.02);
+        turret.config_kI(1, 0);
+        turret.config_kD(1, 9);
 
 
     }
@@ -44,6 +53,10 @@ public class Turret extends SubsystemBase {
 //Setting Power with position output
     public void turnWithEncoders(double counts) {
         turret.set(TalonFXControlMode.Position, counts);
+    }
+
+    public void setPosition(double encoderPosition){
+        turret.set(TalonFXControlMode.Position, encoderPosition);
     }
 
 //Setting the Encoder position of the turret to 0

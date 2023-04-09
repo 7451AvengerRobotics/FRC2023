@@ -8,11 +8,11 @@ public class DriveConstants {
   public static final int INPUT_ROLLING_AVERAGE_SAMPLE_SIZE = 20;
   
   // Voltage
-  public static final double KS_VOLTS = 0.051905;
-  public static final double KV_VOLT_SECONDS_PER_METER = 2.9014;
-  public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0.39614;
+  public static final double KS_VOLTS = 0;
+  public static final double KV_VOLT_SECONDS_PER_METER = 1;
+  public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0;
 
-  public static final double KP_DRIVE_VELOCITY = 0.9638;
+  public static final double KP_DRIVE_VELOCITY = 0.025;
 
   // Differential Drive Kinematics
   public static final double K_TRACK_WIDTH_METERS = 0.5842;

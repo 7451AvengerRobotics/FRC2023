@@ -17,11 +17,11 @@ public final class PortConstants {
   public static final int[] RIGHT_DRIVE = { 2, 3 };
 
   
-  public static final int VirtualFourBar = 7;
+  public static final int VirtualFourBar = 9;
   public static final int[] Claw = {5, 12}; // need to change port numbers
   public static final int Gyro = 8;
   public static final int Turret = 6;
   public static final int[] Arm = {0, 7, 6};
-  public static final int[] CLAW_PNEUMATIC = {1, 7};
+  public static final int CLAW_PNEUMATIC = 5;
   //public static final int Claw = 13;
 }

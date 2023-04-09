@@ -17,7 +17,7 @@ public class ArmRetractCommand extends CommandBase{
 
     @Override 
     public void execute(){
-        arm.retract();
+        arm.extend();
     }
     
     @Override

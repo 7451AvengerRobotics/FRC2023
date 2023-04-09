@@ -22,7 +22,7 @@ public class ResetVFbarEncoder extends CommandBase{
 
     @Override 
     public void execute(){
-        arm.retract();
+        arm.extend();
         bar.setPosition(power);
     }
     

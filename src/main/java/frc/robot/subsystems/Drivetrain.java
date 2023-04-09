@@ -20,7 +20,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PortConstants;
@@ -107,14 +106,14 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].setNeutralMode(NeutralMode.Brake);
     rightMotors[1].setNeutralMode(NeutralMode.Brake);
 
-    leftMotors[0].configOpenloopRamp(1);
-    leftMotors[1].configOpenloopRamp(1);
-    rightMotors[0].configOpenloopRamp(1);
-    rightMotors[1].configOpenloopRamp(1);
+    leftMotors[0].configOpenloopRamp(0.7);
+    leftMotors[1].configOpenloopRamp(0.7);
+    rightMotors[0].configOpenloopRamp(0.7);
+    rightMotors[1].configOpenloopRamp(0.7);
 
-    resetEncoders();
-    setBreakMode();
-    resetGyro();
+    // resetEncoders();
+    // setBreakMode();
+    // resetGyro();
 
 
     //Shuffleboard.getTab("AUTON").add(m_field).withSize(7, 4).withPosition(3, 0);

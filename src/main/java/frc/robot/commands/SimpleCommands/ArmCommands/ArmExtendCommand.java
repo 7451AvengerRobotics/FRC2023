@@ -17,7 +17,7 @@ public class ArmExtendCommand extends CommandBase{
 
     @Override 
     public void execute(){
-        arm.extend();
+        arm.retract();
         arm.unlockSolenoid();
     }
     
