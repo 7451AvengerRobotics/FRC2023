@@ -161,10 +161,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double encoderTicksToMeters(double currentEncoderValue) {
-    double motorRotations = (double) currentEncoderValue / 2048;
-    double wheelRotations = motorRotations / 12.75;
-    double positionMeters = wheelRotations * Units.inchesToMeters(DriveConstants.kWheelCircumferenceInches);
-    return positionMeters;
+    return currentEncoderValue/(2048 * 12.75 * Units.inchesToMeters(DriveConstants.kWheelCircumferenceInches));
   }
 
   /**
@@ -223,11 +220,11 @@ public class Drivetrain extends SubsystemBase {
 
   public double getRightEncoderVelocity() {
     // Multiply the raw velocity by 10 since it reports per 100 ms, we want the velocity in m/s
-    return encoderTicksToMeters(rightMotors[0].getSelectedSensorVelocity()) * 10;
-  }
+    return encoderTicksToMeters(rightMotors[0].getSelectedSensorVelocity() * 10);
+}
 
   public double getLeftEncoderVelocity() {
-    return encoderTicksToMeters(leftMotors[0].getSelectedSensorVelocity()) * 10;
+    return encoderTicksToMeters(leftMotors[0].getSelectedSensorVelocity() * 10) ;
   }
 
   /**
