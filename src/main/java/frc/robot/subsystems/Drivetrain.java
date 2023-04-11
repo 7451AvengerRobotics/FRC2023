@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -66,9 +67,10 @@ public class Drivetrain extends SubsystemBase {
     // Creating the differential drive and items needed for autonomous
     differentialDrive = new DifferentialDrive(leftMotors[0], rightMotors[0]);
     gyro = new Pigeon2(PortConstants.Gyro);
-    odometry = new DifferentialDriveOdometry(this.getHeading(),
-        leftMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits,
-        rightMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits);
+    odometry = new DifferentialDriveOdometry(
+        this.getHeading(),
+        encoderTicksToMeters(leftMotors[0].getSelectedSensorPosition()),
+        encoderTicksToMeters(rightMotors[0].getSelectedSensorPosition()));
 
     // Instantiating the Autonomous and Kinematics
     kinematics = new DifferentialDriveKinematics(DriveConstants.K_TRACK_WIDTH_METERS);
@@ -123,9 +125,10 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // Updating the odometry every 20 ms
-    odometry.update(this.getHeading(),
-        leftMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits,
-        rightMotors[0].getSelectedSensorPosition() / DriveConstants.conversionForFalconUnits);
+    odometry.update(
+      this.getHeading(),
+      encoderTicksToMeters(leftMotors[0].getSelectedSensorPosition()),
+      encoderTicksToMeters(rightMotors[0].getSelectedSensorPosition()));
     // differentialDrive.setSafetyEnabled(true);
     // differentialDrive.setSafetyEnabled(false);
     // differentialDrive.setExpiration(.1);
@@ -157,14 +160,20 @@ public class Drivetrain extends SubsystemBase {
     m_field.getObject("Field").setTrajectory(new Trajectory());
   }
 
+  public double encoderTicksToMeters(double currentEncoderValue) {
+    double motorRotations = (double) currentEncoderValue / 2048;
+    double wheelRotations = motorRotations / 12.75;
+    double positionMeters = wheelRotations * Units.inchesToMeters(DriveConstants.kWheelCircumferenceInches);
+    return positionMeters;
+  }
+
   /**
    * This will get the wheel speeds for the robot
    * 
    * @return Differential Drive Wheel Speeds
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftMotors[0].getSelectedSensorVelocity(),
-        rightMotors[0].getSelectedSensorVelocity());
+    return new DifferentialDriveWheelSpeeds(getLeftEncoderVelocity(), getRightEncoderVelocity());
   }
 
   /**
@@ -210,6 +219,15 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].setSelectedSensorPosition(0);
     rightMotors[1].setSelectedSensorPosition(0);
 
+  }
+
+  public double getRightEncoderVelocity() {
+    // Multiply the raw velocity by 10 since it reports per 100 ms, we want the velocity in m/s
+    return encoderTicksToMeters(rightMotors[0].getSelectedSensorVelocity()) * 10;
+  }
+
+  public double getLeftEncoderVelocity() {
+    return encoderTicksToMeters(leftMotors[0].getSelectedSensorVelocity()) * 10;
   }
 
   /**

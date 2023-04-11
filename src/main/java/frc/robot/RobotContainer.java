@@ -145,11 +145,11 @@ public class RobotContainer {
     Command instantCmd = new InstantCommand();
     chooser.setDefaultOption("Nothing", instantCmd);
     autoMap.put(instantCmd, "nothing");
-    // chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, -0.3,claw, -0.8, turret, bar));
-    // chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
-    // chooser.addOption("BalanceChargePath", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
-    // chooser.addOption("God I hope this works", new EncoderAuto(arm, drivetrain, -0.3, claw, -0.8, turret, bar));
-    // chooser.addOption("God I hope this work", new TwoElementAuto(arm, drivetrain, -0.3, claw, -0.5, turret, bar));
+    //chooser.addOption("Balance Auto Timed", new ComplexAuto(arm, drivetrain, -0.3,claw, -0.8, turret, bar));
+    chooser.addOption("2CubeAuto", ramAutoBuilder("2CubeAuto", AutoConstants.twoCubeAuto));
+    chooser.addOption("BalanceChargePath", ramAutoBuilder("BasicChargeAuto", AutoConstants.basicChargeAuto));
+    //chooser.addOption("God I hope this works", new EncoderAuto(arm, drivetrain, -0.3, claw, -0.8, turret, bar));
+    chooser.addOption("God I hope this work", new TwoElementAuto(arm, drivetrain, -0.3, claw, -0.5, turret, bar));
     chooser.addOption("One Cube and Park", new Encoder1Auto(arm, drivetrain, -0.3, bar, claw, -0.2, turret, gyro));
     chooser.addOption("One Cube and ParkPLS", new Encoder2Auto(arm, drivetrain, -0.3, bar, claw, -0.3, turret, gyro));
     chooser.addOption("Auto Encoder", new TwoElementAuto(arm, drivetrain, -0.3, claw, -0.5, turret, bar));
@@ -159,10 +159,10 @@ public class RobotContainer {
 
   }
 
-  // public void setBasicChargeAutoMap() {
-  //   AutoConstants.basicChargeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(2));
-  //   AutoConstants.basicChargeAuto.put("Stop", new ClawToggle(claw));
-  // }
+  public void setBasicChargeAutoMap() {
+    AutoConstants.basicChargeAuto.put("Start", new ClawOuttake(claw, 0.5).withTimeout(2));
+    AutoConstants.basicChargeAuto.put("Stop", new ClawToggle(claw));
+  }
 
   public void setTwoCubeAuto() {
     AutoConstants.twoCubeAuto.put("Start", new SequentialCommandGroup(

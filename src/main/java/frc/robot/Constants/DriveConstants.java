@@ -11,6 +11,8 @@ public class DriveConstants {
   public static final double KS_VOLTS = 0;
   public static final double KV_VOLT_SECONDS_PER_METER = 1;
   public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0;
+  public static final double kWheelRadiusInches = 3;
+  public static final double kWheelCircumferenceInches = 2 * Math.PI * kWheelRadiusInches;
 
   public static final double KP_DRIVE_VELOCITY = 0.025;
 
