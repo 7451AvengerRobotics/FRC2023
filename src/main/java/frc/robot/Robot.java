@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ColorSensor;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.VirtualFourBar;
@@ -35,7 +34,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private Drivetrain drivetrain;
   private Turret turret;
   private VirtualFourBar bar;
   private ColorSensor color;  
@@ -58,7 +56,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    drivetrain = new Drivetrain();
     led = new Led();
     turret = new Turret();
     bar = new VirtualFourBar(); 
@@ -67,8 +64,6 @@ public class Robot extends TimedRobot {
     bar.zeroSensors();  
     CameraServer.startAutomaticCapture();
 
-    Shuffleboard.getTab("AUTON").add(m_field).withSize(7, 4).withPosition(3, 0);
-    m_field.setRobotPose(drivetrain.getPose());
 
   }
 
@@ -88,9 +83,9 @@ public class Robot extends TimedRobot {
 
 
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Yaw", drivetrain.getGyroYaw());
-    SmartDashboard.putNumber("Pitch", drivetrain.getGyroPitch());
-    SmartDashboard.putNumber("Roll", drivetrain.getGyroRoll());
+    SmartDashboard.putNumber("Yaw", m_robotContainer.drivetrain.getGyroYaw());
+    SmartDashboard.putNumber("Pitch", m_robotContainer.drivetrain.getGyroPitch());
+    SmartDashboard.putNumber("Roll", m_robotContainer.drivetrain.getGyroRoll());
     SmartDashboard.putString("Rotation2d", toString());
     SmartDashboard.putNumber("Turret Encoder Position", turret.getencoderValues());
     SmartDashboard.putNumber("Mini-Arm Encoder Pos", bar.getencoderValues());
@@ -106,9 +101,9 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     if (RobotContainer.autoMap.get(RobotContainer.chooser.getSelected()) != "nothing" && RobotContainer.autoMap.get(RobotContainer.chooser.getSelected()) != "test") {
-      drivetrain.showTraj(RobotContainer.autoMap.get(RobotContainer.chooser.getSelected()));
+      m_robotContainer.drivetrain.showTraj(RobotContainer.autoMap.get(RobotContainer.chooser.getSelected()));
     } else {
-      drivetrain.showTraj();
+      m_robotContainer.drivetrain.showTraj();
     }
 
     if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
@@ -124,10 +119,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    drivetrain.setBreakMode();
-    drivetrain.resetEncoders();
-    drivetrain.resetGyro();
-    drivetrain.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+    m_robotContainer.drivetrain.setBreakMode();
+    m_robotContainer.drivetrain.resetEncoders();
+    m_robotContainer.drivetrain.resetGyro();
+    m_robotContainer.drivetrain.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)

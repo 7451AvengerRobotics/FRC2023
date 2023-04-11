@@ -49,7 +49,7 @@ import frc.robot.subsystems.VirtualFourBar;
 public class RobotContainer {
 
   /* Initializing Robot Subsystems */
-  private final  Drivetrain drivetrain;
+  public final  Drivetrain drivetrain;
   private final Arm arm;
   private final Pigeon2 gyro;
   private final Claw claw;
@@ -267,8 +267,8 @@ If the driver presses the B button than the drivtrain will reset back to Tank Dr
     turretRight.whileTrue(new TurretTestCommand(turret, 0.5));
     turretLeft.whileTrue(new TurretTestCommand(turret, -0.5));
     rightBumper.whileTrue(new ClawToggle(claw));  
-    leftTrigger.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3));  
-    rightTrigger.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));  
+    leftTrigger.whileTrue(new VirtualFourBarCommand(bar, arm, -0.3));  
+    rightTrigger.whileTrue(new VirtualFourBarCommand(bar, arm, 0.3));  
 
 
     /*Actual Command Mapping */

@@ -37,7 +37,12 @@ public class ButtonConstants {
   public static final int ResetEncoder = 11;
 
   public static final int lockSolenoid = 7;
-  /* Actual Buttons */
+  
+
+
+
+
+  
 
   /* Test Buttons */
   public static final int clawToggle = 1;

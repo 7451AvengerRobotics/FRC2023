@@ -11,12 +11,17 @@
           "open": true
         }
       },
-      "Talon FX[4]": {
+      "Talon FX[2]": {
         "header": {
           "open": true
         }
       },
-      "Talon FX[4]/Integrated Sensor": {
+      "Talon FX[3]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[4]": {
         "header": {
           "open": true
         }
@@ -31,6 +36,17 @@
     }
   },
   "NetworkTables": {
+    "retained": {
+      "Shuffleboard": {
+        "AUTON": {
+          "SendableChooser[0]": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      }
+    },
     "transitory": {
       "Shuffleboard": {
         ".metadata": {

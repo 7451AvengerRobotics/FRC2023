@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PortConstants;
@@ -113,17 +114,33 @@ public class Drivetrain extends SubsystemBase {
     rightMotors[0].configOpenloopRamp(0.7);
     rightMotors[1].configOpenloopRamp(0.7);
 
-    // resetEncoders();
-    // setBreakMode();
-    // resetGyro();
+    resetEncoders();
+    setBreakMode();
+    resetGyro();
 
 
-    //Shuffleboard.getTab("AUTON").add(m_field).withSize(7, 4).withPosition(3, 0);
+    Shuffleboard.getTab("AUTON").add(m_field).withSize(7, 4).withPosition(3, 0);
 
   }
 
   @Override
   public void periodic() {
+    // Updating the odometry every 20 ms
+    odometry.update(
+      this.getHeading(),
+      encoderTicksToMeters(leftMotors[0].getSelectedSensorPosition()),
+      encoderTicksToMeters(rightMotors[0].getSelectedSensorPosition()));
+    // differentialDrive.setSafetyEnabled(true);
+    // differentialDrive.setSafetyEnabled(false);
+    // differentialDrive.setExpiration(.1);
+    differentialDrive.feed();
+
+    m_field.setRobotPose(getPose());
+
+  }
+
+  @Override
+  public void simulationPeriodic() {
     // Updating the odometry every 20 ms
     odometry.update(
       this.getHeading(),
@@ -181,9 +198,9 @@ public class Drivetrain extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     odometry.resetPosition(getHeading(),
-        leftMotors[0].getSelectedSensorVelocity(),
-        rightMotors[0].getSelectedSensorVelocity(),
-        pose);
+      encoderTicksToMeters(leftMotors[0].getSelectedSensorPosition()),
+      encoderTicksToMeters(rightMotors[0].getSelectedSensorPosition()),
+      pose);
   }
 
   /**
